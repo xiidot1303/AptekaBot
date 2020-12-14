@@ -54,4 +54,4 @@ dp.add_handler(MessageHandler(Filters.text('Наши партнеры'), our_par
 dp.add_handler(MessageHandler(Filters.text('Наш сайт'), our_site))
 dp.add_handler(MessageHandler(Filters.text('Настройки'), settings))
 dp.add_handler(MessageHandler(Filters.forwarded, forward))
-updater.start_polling()
+updater.start_webhook()
