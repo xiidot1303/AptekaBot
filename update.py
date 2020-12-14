@@ -56,7 +56,7 @@ dp.add_handler(MessageHandler(Filters.text('Настройки'), settings))
 dp.add_handler(MessageHandler(Filters.forwarded, forward))
 updater.start_webhook(listen='127.0.0.1',
                       port=8443,
-                      url_path=TOKEN,
+                      url_path=TOKEN)
     
 
 updater.bot.set_webhook('https://aptekabot.elite-house.uz/{}'.format(TOKEN))
