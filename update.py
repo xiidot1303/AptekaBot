@@ -57,6 +57,4 @@ dp.add_handler(MessageHandler(Filters.forwarded, forward))
 updater.start_webhook(listen='0.0.0.0',
                       port=8443,
                       url_path=TOKEN,
-                      key='private.key',
-                      cert='cert.pem',
                       webhook_url='https://example.com:8443/TOKEN')
