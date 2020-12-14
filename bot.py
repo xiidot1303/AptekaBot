@@ -50,7 +50,7 @@ def global_name(update, context):
                 path = i
                 break
         name = update.message.text
-        workbook = xlrd.open_workbook('D:\\x\\XIIdot\\VID\\AptekaBOT\\{}'.format(path))
+        workbook = xlrd.open_workbook(''.format(path))
         worksheet = workbook.sheet_by_index(0)
         c = 0
         r = []
@@ -82,7 +82,7 @@ def select_drugs(update, context):
             if i[-3::] == 'xls' or i[-4::] == 'xlsx':
                 path = i
                 break
-        workbook = xlrd.open_workbook('D:\\x\\XIIdot\\VID\\AptekaBOT\\{}'.format(path))
+        workbook = xlrd.open_workbook(''.format(path))
 
         worksheet = workbook.sheet_by_index(0)
 
@@ -112,7 +112,7 @@ def find_address(title):
         if i[-3::] == 'xls' or i[-4::] == 'xlsx':
             path = i
             break
-    workbook = xlrd.open_workbook('D:\\x\\XIIdot\\VID\\AptekaBOT\\{}'.format(path))
+    workbook = xlrd.open_workbook(''.format(path))
 
     worksheet = workbook.sheet_by_index(1)
 
@@ -136,7 +136,7 @@ def find_phone(title):
         if i[-3::] == 'xls' or i[-4::] == 'xlsx':
             path = i
             break
-    workbook = xlrd.open_workbook('D:\\x\\XIIdot\\VID\\AptekaBOT\\{}'.format(path))
+    workbook = xlrd.open_workbook(''.format(path))
 
     worksheet = workbook.sheet_by_index(1)
 
