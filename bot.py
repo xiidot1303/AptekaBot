@@ -1,5 +1,5 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler, ConversationHandler
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, ChatAction
 import xlrd
 import os
 from conversationList import GLOBAL_NAME, SELECT_DRUGS, SUPERADMIN, UPDATE_EXCEL, START, EDIT_ABOUT_US, UPDATE_ABOUT_US
@@ -17,6 +17,7 @@ def issuperadmin(id):
         return False
 superadmin = 206261493
 def start(update, context):
+    print(update.message.date)
     admins = []
     conn = sqlite3.connect('data.db')
     c = conn.cursor()
@@ -39,18 +40,21 @@ def start(update, context):
     
     
 def global_name(update, context):
+    bot = context.bot
     text = update.message.text
     if text == 'cancel':
         update.message.reply_text("hi", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Настройки']], resize_keyboard=True))
         return ConversationHandler.END
     else:
+        bot.send_chat_action(chat_id=update.message.chat.id, action=ChatAction.TYPING)
         p = os.listdir()
         for i in p:
             if i[-3::] == 'xls' or i[-4::] == 'xlsx':
                 path = i
                 break
+        print(path)
         name = update.message.text
-        workbook = xlrd.open_workbook(''.format(path))
+        workbook = xlrd.open_workbook('{}'.format(path))
         worksheet = workbook.sheet_by_index(0)
         c = 0
         r = []
@@ -77,12 +81,13 @@ def select_drugs(update, context):
         update.message.reply_text('write global name:', reply_markup = ReplyKeyboardMarkup(keyboard=[['cancel']], resize_keyboard=True))
         return GLOBAL_NAME
     else:
+        print('yea')
         p = os.listdir()
         for i in p:
             if i[-3::] == 'xls' or i[-4::] == 'xlsx':
                 path = i
                 break
-        workbook = xlrd.open_workbook(''.format(path))
+        workbook = xlrd.open_workbook('{}'.format(path))
 
         worksheet = workbook.sheet_by_index(0)
 
@@ -96,9 +101,22 @@ def select_drugs(update, context):
         results = ""
         for i in r:
             w = worksheet.row_values(i)
+            
+            conn = sqlite3.connect('data.db')
+            c = conn.cursor()
+            c.execute("SELECT * FROM date ")
+            f = c.fetchone()[0]
+            print(f)
+            d = ''
+            for x in str(f):
+                if x == ' ':
+                    break
+                else:
+                    d += x
             print(w)
+
             results += '\nНазвания: ' + w[0] + '\nПроизводитель: ' + w[9] + '({})'.format(w[10]) + '\nАдрес:' + find_address(w[8]) + '\nЦена сум: ' + str(w[4]) + '\nЦена в долларах США: ' + str(w[5]) + '\nЦена в ЕВРО: ' + str(w[6]) + '\nТелефон: '+ find_phone(w[8]) + '\n\n\n\n\n'
-        print('end')
+        
         
         bot.send_message(update.message.chat.id, results)
         update.message.reply_text("hi", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Настройки']], resize_keyboard=True))
@@ -112,7 +130,7 @@ def find_address(title):
         if i[-3::] == 'xls' or i[-4::] == 'xlsx':
             path = i
             break
-    workbook = xlrd.open_workbook(''.format(path))
+    workbook = xlrd.open_workbook('{}'.format(path))
 
     worksheet = workbook.sheet_by_index(1)
 
@@ -136,7 +154,7 @@ def find_phone(title):
         if i[-3::] == 'xls' or i[-4::] == 'xlsx':
             path = i
             break
-    workbook = xlrd.open_workbook(''.format(path))
+    workbook = xlrd.open_workbook('{}'.format(path))
 
     worksheet = workbook.sheet_by_index(1)
 
@@ -175,10 +193,16 @@ def update_excel(update, context):
             path = i
             break
     os.remove(path)
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute("""UPDATE date SET datetime = '{}' """.format(str(update.message.date)))
+    conn.commit()
+    conn.close()
     bot = context.bot
     doc = bot.get_file(update.message.document.file_id)
     doc.download(update.message.document.file_name)
     update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Добавить админ']], resize_keyboard=True))
+    
     return SUPERADMIN
 
 def cancel(update, context):
