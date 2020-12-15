@@ -3,7 +3,7 @@ from bot import start, global_name, select_drugs, doc, cancel, error, find, upda
 from buttons import find_drug, about_us, our_partners, our_site, settings
 from admin import superadmin, edit_about_us, update_about_us, edit_our_partners, update_our_partners, edit_our_site, update_our_site, create_admin, add_remove_admin
 from conversationList import GLOBAL_NAME, SELECT_DRUGS, SUPERADMIN, UPDATE_EXCEL, START, EDIT_ABOUT_US, UPDATE_ABOUT_US, EDIT_OUR_PARTNERS, UPDATE_OUR_PARTNERS, EDIT_OUR_SITE
-from conversationList import UPDATE_OUR_SITE, CREATE_ADMIN, ADD_REMOVE_ADMIN
+from conversationList import UPDATE_OUR_SITE, CREATE_ADMIN, ADD_REMOVE_ADMIN, DELETE_ADMIN
 
 TOKEN = '1415026630:AAG7eTqgeNy0sHu2KUHiLvigsgyLcJ-aXKw'
 
@@ -39,6 +39,7 @@ start_conversation_handler = ConversationHandler(
         UPDATE_OUR_SITE: [MessageHandler(Filters.text, update_our_site)],
         CREATE_ADMIN: [MessageHandler(Filters.text, create_admin)],
         ADD_REMOVE_ADMIN: [MessageHandler(Filters.text, add_remove_admin)],
+        DELETE_ADMIN: [MessageHandler(Filters.text, delete_admin)],
     },
     fallbacks = [CommandHandler('cancel', cancel)]
 )

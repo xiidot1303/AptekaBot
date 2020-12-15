@@ -4,7 +4,7 @@ import sqlite3
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from conversationList import GLOBAL_NAME, SELECT_DRUGS, SUPERADMIN, UPDATE_EXCEL, START, EDIT_ABOUT_US, UPDATE_ABOUT_US, START, EDIT_OUR_PARTNERS, UPDATE_OUR_PARTNERS, UPDATE_OUR_SITE
 from conversationList import EDIT_OUR_SITE, ADD_REMOVE_ADMIN
-from conversationList import CREATE_ADMIN
+from conversationList import CREATE_ADMIN, DELETE_ADMIN
 def superadmin(update, context):
     text = update.message.text
     if text == 'Обновить Excel':
@@ -161,6 +161,9 @@ def add_remove_admin(update, context):
     if text == 'add admin':
         update.message.reply_text('send forwrded message', reply_markup=ReplyKeyboardRemove(remove_keyboard = True))
         return CREATE_ADMIN
+    if text == 'remove':
+        update.message.reply_text('pls. enter id admin:', reply_markup=ReplyKeyboardRemove(remove_keyboard = True))
+        return DELETE_ADMIN
     elif text == 'cancel':
     
         if issuperadmin(update.message.chat.id):
@@ -175,6 +178,7 @@ def create_admin(update, context):
     if update.message.forward_from == None:
         update.message.reply_text('such user dont permitted forward theri messages')
         return CREATE_ADMIN
+    
     else:
         
         obj = update.message.forward_from
@@ -191,3 +195,26 @@ def create_admin(update, context):
         conn.close()
         update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
         return SUPERADMIN
+
+
+
+
+def delete_admin(update, context):
+    bot = context.bot
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    try:
+        c.execute("DELETE FROM admins WHERE id={} ".format(int(update.message.text)))
+        
+        conn.commit()
+        conn.close()
+        update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
+        return SUPERADMIN
+    except:
+        update.message.reply_text('error, write correct')
+        
+        conn.commit()
+        conn.close()
+        return DELETE_ADMIN
+
+
