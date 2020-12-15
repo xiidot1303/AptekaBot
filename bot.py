@@ -81,7 +81,7 @@ def select_drugs(update, context):
         update.message.reply_text('write global name:', reply_markup = ReplyKeyboardMarkup(keyboard=[['cancel']], resize_keyboard=True))
         return GLOBAL_NAME
     else:
-        print('yea')
+
         p = os.listdir()
         for i in p:
             if i[-3::] == 'xls' or i[-4::] == 'xlsx':
@@ -106,16 +106,16 @@ def select_drugs(update, context):
             c = conn.cursor()
             c.execute("SELECT * FROM date ")
             f = c.fetchone()[0]
-            print(f)
+
             d = ''
             for x in str(f):
                 if x == ' ':
                     break
                 else:
                     d += x
-            print(w)
 
-            results += '\nНазвания: ' + w[0] + '\nПроизводитель: ' + w[9] + '({})'.format(w[10]) + '\nАдрес:' + find_address(w[8]) + '\nЦена сум: ' + str(w[4]) + '\nЦена в долларах США: ' + str(w[5]) + '\nЦена в ЕВРО: ' + str(w[6]) + '\nТелефон: '+ find_phone(w[8]) + '\n\n\n\n\n'
+
+            results += 'дата загрузки прайса' + d + '\nНазвания: ' + w[0] + '\nПроизводитель: ' + w[9] + '({})'.format(w[10]) + '\nАдрес:' + find_address(w[8]) + '\nЦена сум: ' + str(w[4]) + '\nЦена в долларах США: ' + str(w[5]) + '\nЦена в ЕВРО: ' + str(w[6]) + '\nТелефон: '+ find_phone(w[8]) + '\n\n\n\n\n'
         
         
         bot.send_message(update.message.chat.id, results)
