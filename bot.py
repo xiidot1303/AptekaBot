@@ -191,23 +191,30 @@ def doc(update, context):
     
 
 def update_excel(update, context):
-    p = os.listdir()
-    for i in p:
-        if i[-3::] == 'xls' or i[-4::] == 'xlsx':
-            path = i
-            break
-    os.remove(path)
-    conn = sqlite3.connect('data.db')
-    c = conn.cursor()
-    c.execute("""UPDATE date SET datetime = '{}' """.format(str(update.message.date)))
-    conn.commit()
-    conn.close()
-    bot = context.bot
-    doc = bot.get_file(update.message.document.file_id)
-    doc.download(update.message.document.file_name)
-    update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Добавить админ']], resize_keyboard=True))
-    
-    return SUPERADMIN
+    if not update.message.text == None:
+        if issuperadmin(update.message.chat.id):
+            update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
+        else:
+            update.message.reply_text("hi admin", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт']], resize_keyboard=True))
+        return SUPERADMIN    
+    else:
+        p = os.listdir()
+        for i in p:
+            if i[-3::] == 'xls' or i[-4::] == 'xlsx':
+                path = i
+                break
+        os.remove(path)
+        conn = sqlite3.connect('data.db')
+        c = conn.cursor()
+        c.execute("""UPDATE date SET datetime = '{}' """.format(str(update.message.date)))
+        conn.commit()
+        conn.close()
+        bot = context.bot
+        doc = bot.get_file(update.message.document.file_id)
+        doc.download(update.message.document.file_name)
+        update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Добавить админ']], resize_keyboard=True))
+
+        return SUPERADMIN
 
 def cancel(update, context):
     print('done')

@@ -29,7 +29,7 @@ start_conversation_handler = ConversationHandler(
     states = {
         #GET_BILL_DETAILS: [MessageHandler(Filters.text,get_bill_details)],
         SUPERADMIN: [MessageHandler(Filters.text, superadmin)],
-        UPDATE_EXCEL: [MessageHandler(Filters.document, update_excel)],
+        UPDATE_EXCEL: [MessageHandler(Filters.all, update_excel)],
         EDIT_ABOUT_US: [MessageHandler(Filters.text, edit_about_us)],
         UPDATE_ABOUT_US: [MessageHandler(Filters.text, update_about_us)],
         START: [CommandHandler('start', start)],
