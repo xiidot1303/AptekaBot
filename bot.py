@@ -165,8 +165,8 @@ def select_drugs(update, context):
         
         results = 'дата загрузки прайса: ' + d + results
         bot.send_message(update.message.chat.id, results)
-        update.message.reply_text("hi", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Настройки']], resize_keyboard=True))
-        return ConversationHandler.END        
+        
+        return SELECT_DRUGS        
     
 
 def find_address(title):
