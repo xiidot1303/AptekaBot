@@ -47,7 +47,7 @@ def settings(update, context):
 
         i_change_sort = InlineKeyboardButton(text='сортировать по процентам', callback_data='sort_by_процентам')
         i_change_price = InlineKeyboardButton(text='по {}'.format(change_sort_type('возрастание')), callback_data='price_to_убывание')
-        update.message.reply_text('Сортировка по: цене \nпо:   возрастание', reply_markup=InlineKeyboardMarkup([[i_change_price], [i_change_sort]]))
+        update.edit_message_text('Сортировка по: цене \nпо:   возрастание', reply_markup=InlineKeyboardMarkup([[i_change_price], [i_change_sort]]))
 
     else:
         
@@ -64,7 +64,7 @@ def settings(update, context):
         
         i_change_sort = InlineKeyboardButton(text='сортировать по {}'.format(change_sort_type(obj[1])), callback_data='sort_by_{}'.format(change_sort_type(obj[1])))
         
-        update.message.reply_text('Сортировка по: {} \nпо:   {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_change_price_or_procent],[i_change_sort]]))
+        update.edit_message_text('Сортировка по: {} \nпо:   {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_change_price_or_procent],[i_change_sort]]))
 
     conn.commit()
     conn.close()
