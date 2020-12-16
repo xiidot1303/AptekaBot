@@ -41,8 +41,8 @@ def start(update, context):
     
 def global_name(update, context):
     bot = context.bot
-    text = update.message.text
-    if text == 'cancel':
+    text = update.message.text 
+    if text == 'Назад':
         update.message.reply_text("hi", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Настройки']], resize_keyboard=True))
         return ConversationHandler.END
     else:
@@ -58,8 +58,8 @@ def global_name(update, context):
         worksheet = workbook.sheet_by_index(0)
         c = 0
         r = []
-        for i in worksheet.col_values(1):
-            if i == name:
+        for i in worksheet.col_values(0):
+            if name.lower() in i.lower():
                 r.append(c)
             c += 1
         items = []
@@ -73,7 +73,7 @@ def global_name(update, context):
                 if not w[0] in texts:
                     texts.append(w[0])
                     items.append([KeyboardButton(text=w[0])])
-            items.append([KeyboardButton(text='cancel')])
+            items.append([KeyboardButton(text='Назад')])
             update.message.reply_text('select drug name', reply_markup=ReplyKeyboardMarkup(items, resize_keyboard=True, one_time_keyboard=True))
             return SELECT_DRUGS
     
@@ -81,8 +81,8 @@ def global_name(update, context):
 def select_drugs(update, context):
     bot = context.bot
     name = update.message.text
-    if name == 'cancel':
-        update.message.reply_text('write global name:', reply_markup = ReplyKeyboardMarkup(keyboard=[['cancel']], resize_keyboard=True))
+    if name == 'Назад':
+        update.message.reply_text('write global name:', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
         return GLOBAL_NAME
     else:
         bot.send_chat_action(chat_id=update.message.chat.id, action=ChatAction.TYPING)

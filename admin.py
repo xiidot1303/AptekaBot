@@ -17,7 +17,7 @@ def superadmin(update, context):
         c = conn.cursor()
         c.execute("SELECT * FROM menus")
         i_edit = KeyboardButton(text='Изменить')
-        i_cancel = KeyboardButton(text='cancel')
+        i_cancel = KeyboardButton(text='Назад')
         update.message.reply_text(c.fetchall()[0][0], reply_markup=ReplyKeyboardMarkup([[i_edit, i_cancel]], resize_keyboard=True, one_time_keyboard=True))
         conn.commit()
         conn.close()
@@ -28,7 +28,7 @@ def superadmin(update, context):
         c = conn.cursor()
         c.execute("SELECT * FROM menus")
         i_edit = KeyboardButton(text='Изменить')
-        i_cancel = KeyboardButton(text='cancel')
+        i_cancel = KeyboardButton(text='Назад')
         update.message.reply_text(c.fetchall()[0][1], reply_markup=ReplyKeyboardMarkup([[i_edit, i_cancel]], resize_keyboard=True, one_time_keyboard=True))
         conn.commit()
         conn.close()
@@ -38,7 +38,7 @@ def superadmin(update, context):
         c = conn.cursor()
         c.execute("SELECT * FROM menus")
         i_edit = KeyboardButton(text='Изменить')
-        i_cancel = KeyboardButton(text='cancel')
+        i_cancel = KeyboardButton(text='Назад')
         update.message.reply_text(c.fetchall()[0][2], reply_markup=ReplyKeyboardMarkup([[i_edit, i_cancel]], resize_keyboard=True, one_time_keyboard=True))
         conn.commit()
         conn.close()
@@ -60,7 +60,7 @@ def superadmin(update, context):
             
                 n += 1
             
-            update.message.reply_text(admin_list, reply_markup=ReplyKeyboardMarkup(keyboard=[['add admin', 'remove', 'cancel']], resize_keyboard=True))
+            update.message.reply_text(admin_list, reply_markup=ReplyKeyboardMarkup(keyboard=[['add admin', 'remove', 'Назад']], resize_keyboard=True))
 
             conn.commit()
             conn.close()
@@ -71,7 +71,7 @@ def edit_our_site(update, context):
         mrk = ReplyKeyboardRemove(remove_keyboard=True)
         update.message.reply_text('Send new our site', reply_markup=mrk)
         return UPDATE_OUR_SITE
-    elif text == 'cancel':
+    elif text == 'Назад':
     
         if issuperadmin(update.message.chat.id):
             update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
@@ -101,7 +101,7 @@ def edit_our_partners(update, context):
         mrk = ReplyKeyboardRemove(remove_keyboard=True)
         update.message.reply_text('Send new our partners ', reply_markup=mrk)
         return UPDATE_OUR_PARTNERS
-    elif text == 'cancel':
+    elif text == 'Назад':
         
         if issuperadmin(update.message.chat.id):
             update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
@@ -131,7 +131,7 @@ def edit_about_us(update, context):
         mrk = ReplyKeyboardRemove(remove_keyboard=True)
         update.message.reply_text('Send new about us ', reply_markup=mrk)
         return UPDATE_ABOUT_US
-    elif text == 'cancel':
+    elif text == 'Назад':
     
         if issuperadmin(update.message.chat.id):
             update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
@@ -164,7 +164,7 @@ def add_remove_admin(update, context):
     if text == 'remove':
         update.message.reply_text('pls. enter id admin:', reply_markup=ReplyKeyboardRemove(remove_keyboard = True))
         return DELETE_ADMIN
-    elif text == 'cancel':
+    elif text == 'Назад':
     
         if issuperadmin(update.message.chat.id):
             update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
@@ -184,7 +184,7 @@ def create_admin(update, context):
         obj = update.message.forward_from
         print(obj)
         if not obj.username == None:
-            username = obj.username
+            username = '@'+obj.username
         else:
             username = ''
         conn = sqlite3.connect('data.db')
