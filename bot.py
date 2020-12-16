@@ -85,7 +85,7 @@ def global_name(update, context):
         items = []
         texts = []
         if not r:
-            mrk = [[KeyboardButton(text='назад')]]
+            mrk = [[KeyboardButton(text='Назад')]]
             update.message.reply_text('no drugs, reenter', reply_markup=ReplyKeyboardMarkup(mrk, resize_keyboard=True, one_time_keyboard=True))
             return GLOBAL_NAME
         else:
@@ -94,7 +94,7 @@ def global_name(update, context):
                 if not w[0] in texts:
                     texts.append(w[0])
                     items.append([KeyboardButton(text=w[0])])
-            items.append([KeyboardButton(text='cancel'), KeyboardButton(text='Главная')])
+            items.append([KeyboardButton(text='Назад'), KeyboardButton(text='Главная')])
             update.message.reply_text('select drug name', reply_markup=ReplyKeyboardMarkup(items, resize_keyboard=True, one_time_keyboard=True))
             return SELECT_DRUGS
     
