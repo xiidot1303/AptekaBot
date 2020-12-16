@@ -4,7 +4,7 @@ import xlrd
 import os
 from conversationList import GLOBAL_NAME, SELECT_DRUGS, SUPERADMIN, UPDATE_EXCEL, START, EDIT_ABOUT_US, UPDATE_ABOUT_US
 import sqlite3
-
+from functions import sort_percent_grow, sort_price_grow, sort_price_wane, sort_percent_wane
 
 def forward(update, context):
     print(update.message.forward_from)
@@ -36,6 +36,12 @@ def start(update, context):
         update.message.reply_text("hi admin", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт']], resize_keyboard=True))
         return SUPERADMIN
     else:
+        conn = sqlite3.connect('data.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM sort WHERE id={} ".format(update.message.chat.id))
+        if not c.fetchall():
+            c.execute("INSERT INTO sort VALUES ({}, 'цене', 'возрастание', 'возрастание')".format(update.message.chat.id))
+
         update.message.reply_text("hi", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Настройки']], resize_keyboard=True))
     
     
@@ -52,7 +58,7 @@ def global_name(update, context):
             if i[-3::] == 'xls' or i[-4::] == 'xlsx':
                 path = i
                 break
-        print(path)
+        
         name = update.message.text
         workbook = xlrd.open_workbook('{}'.format(path))
         worksheet = workbook.sheet_by_index(0)
@@ -60,12 +66,27 @@ def global_name(update, context):
         r = []
         for i in worksheet.col_values(0):
             if name.lower() in i.lower():
+                bot.send_chat_action(chat_id=update.message.chat.id, action=ChatAction.TYPING)
                 r.append(c)
             c += 1
+        c = 0
+        if not r:
+            for i in worksheet.col_values(1):
+                
+                
+                try:
+                    if name.lower() == i.lower():
+                        bot.send_chat_action(chat_id=update.message.chat.id, action=ChatAction.TYPING)
+
+                        r.append(c)
+                except:
+                    wefwefw = 9
+                c += 1
         items = []
         texts = []
         if not r:
-            update.message.reply_text('no such drug.. please reenter..')
+            mrk = [[KeyboardButton(text='назад')]]
+            update.message.reply_text('no drugs, reenter', reply_markup=ReplyKeyboardMarkup(mrk, resize_keyboard=True, one_time_keyboard=True))
             return GLOBAL_NAME
         else:
             for i in r:
@@ -73,7 +94,7 @@ def global_name(update, context):
                 if not w[0] in texts:
                     texts.append(w[0])
                     items.append([KeyboardButton(text=w[0])])
-            items.append([KeyboardButton(text='Назад')])
+            items.append([KeyboardButton(text='cancel'), KeyboardButton(text='Главная')])
             update.message.reply_text('select drug name', reply_markup=ReplyKeyboardMarkup(items, resize_keyboard=True, one_time_keyboard=True))
             return SELECT_DRUGS
     
@@ -81,6 +102,9 @@ def global_name(update, context):
 def select_drugs(update, context):
     bot = context.bot
     name = update.message.text
+    if name == 'Главная':
+        update.message.reply_text("hi", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Настройки']], resize_keyboard=True))
+        return ConversationHandler.END
     if name == 'Назад':
         update.message.reply_text('write global name:', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
         return GLOBAL_NAME
@@ -103,22 +127,40 @@ def select_drugs(update, context):
             c += 1
 
         results = ""
+        w = []
         for i in r:
-            w = worksheet.row_values(i)
+            col = worksheet.row_values(i)
+            w.append(col)
+        conn = sqlite3.connect('data.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM sort WHERE id = {} ".format(update.message.chat.id))
+        obj = c.fetchone()
+        if obj[1] == 'цене':
             
-            conn = sqlite3.connect('data.db')
-            c = conn.cursor()
-            c.execute("SELECT * FROM date ")
-            f = c.fetchone()[0]
-
-            d = ''
-            for x in str(f):
-                if x == ' ':
-                    break
-                else:
-                    d += x
-
-
+            if obj[2] == 'возрастание':
+                w = sort_price_grow(w)
+            elif obj[2] == 'убывание':
+                w = sort_price_wane(w)
+        elif obj[1] == 'процентам':
+            
+            if obj[3] == 'возрастание':
+                w = sort_percent_grow(w)
+            elif obj[3] == 'убывание':
+                w = sort_percent_wane(w)
+        print(w)
+        c.execute("SELECT * FROM date ")
+        f = c.fetchone()[0]
+        
+        d = ''
+        for x in str(f):
+            if x == ' ':
+                break
+            else:
+                d += x
+        all = w
+        for w in all:
+            if w[4] == 0:
+                w[4] = 'ожидаемый'
             results += '\nНазвания: ' + w[0] + '\nПроизводитель: ' + w[9] + '({})'.format(w[10]) + '\nАдрес:' + find_address(w[8]) + '\nЦена сум: ' + str(w[4]) + '\nЦена в долларах США: ' + str(w[5]) + '\nЦена в ЕВРО: ' + str(w[6]) + '\nТелефон: '+ find_phone(w[8]) + '\n\n\n\n\n'
         
         results = 'дата загрузки прайса: ' + d + results

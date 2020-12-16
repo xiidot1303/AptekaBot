@@ -8,7 +8,7 @@ from conversationList import CREATE_ADMIN, DELETE_ADMIN
 def superadmin(update, context):
     text = update.message.text
     if text == 'Обновить Excel':
-        mrk = ReplyKeyboardMarkup(keyboard=[['назад']])
+        mrk = ReplyKeyboardMarkup(keyboard=[['назад']], resize_keyboard=True)
         update.message.reply_text("Send new file", reply_markup=mrk)
         return UPDATE_EXCEL
     elif text == 'О нас':
