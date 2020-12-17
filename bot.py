@@ -289,9 +289,4 @@ def update_excel(update, context):
 def cancel(update, context):
     print('done')
 
-def error(bot, update, error):
-    """Log Errors caused by Updates."""
-    logger.warning('Update "%s" caused error "%s"', update, update.error)
 
-def find(update, context, content_types=["text", "sticker", "pinned_message", "photo", "audio"]):
-    print("kajsoia")

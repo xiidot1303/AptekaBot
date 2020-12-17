@@ -1,5 +1,5 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler, ConversationHandler
-from bot import start, global_name, select_drugs, doc, cancel, error, find, update_excel, forward, write_name, send_phone
+from bot import start, global_name, select_drugs, doc, cancel, update_excel, forward, write_name, send_phone
 from buttons import find_drug, about_us, our_partners, our_site, settings, setting_menus, update_name, update_phone
 from admin import superadmin, edit_about_us, update_about_us, edit_our_partners, update_our_partners, edit_our_site, update_our_site, create_admin, add_remove_admin, delete_admin
 from conversationList import GLOBAL_NAME, SELECT_DRUGS, SUPERADMIN, UPDATE_EXCEL, START, EDIT_ABOUT_US, UPDATE_ABOUT_US, EDIT_OUR_PARTNERS, UPDATE_OUR_PARTNERS, EDIT_OUR_SITE
@@ -10,7 +10,7 @@ TOKEN = '1415026630:AAG7eTqgeNy0sHu2KUHiLvigsgyLcJ-aXKw'
 updater = Updater(token=TOKEN, use_context=True)
 dp = updater.dispatcher
 
-dp.add_error_handler(error)
+
 
 
 
