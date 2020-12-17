@@ -51,7 +51,9 @@ def setting_menus(update, context):
     conn = sqlite3.connect('data.db')
     c = conn.cursor()
     if text == 'profile':
-        update.message.reply_text('name:   phone:   ', reply_markup=ReplyKeyboardMarkup(keyboard=[['name'], ['phone'], ['cancel2']], resize_keyboard=True))
+        c.execute("SELECT * FROM users WHERE id={}".format(update.message.chat.id))
+        obj = c.fetchone()
+        update.message.reply_text('name: {} \n phone: {}  '.format(obj[1], obj[2]), reply_markup=ReplyKeyboardMarkup(keyboard=[['name'], ['phone'], ['cancel2']], resize_keyboard=True))
     if text == 'name':
         update.message.reply_text('write name:')
         return UPDATE_NAME
