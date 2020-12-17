@@ -1,10 +1,10 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler, ConversationHandler
-from bot import start, global_name, select_drugs, doc, cancel, error, find, update_excel, forward
-from buttons import find_drug, about_us, our_partners, our_site, settings, callback
+from bot import start, global_name, select_drugs, doc, cancel, error, find, update_excel, forward, write_name, send_phone
+from buttons import find_drug, about_us, our_partners, our_site, settings, callback, setting_menus, update_name, update_phone
 from admin import superadmin, edit_about_us, update_about_us, edit_our_partners, update_our_partners, edit_our_site, update_our_site, create_admin, add_remove_admin, delete_admin
 from conversationList import GLOBAL_NAME, SELECT_DRUGS, SUPERADMIN, UPDATE_EXCEL, START, EDIT_ABOUT_US, UPDATE_ABOUT_US, EDIT_OUR_PARTNERS, UPDATE_OUR_PARTNERS, EDIT_OUR_SITE
-from conversationList import UPDATE_OUR_SITE, CREATE_ADMIN, ADD_REMOVE_ADMIN, DELETE_ADMIN
-
+from conversationList import UPDATE_OUR_SITE, CREATE_ADMIN, ADD_REMOVE_ADMIN, DELETE_ADMIN, WRITE_NAME, SEND_PHONE, SETTINGS, UPDATE_NAME, UPDATE_PHONE
+from callbacks import callback
 TOKEN = '1415026630:AAG7eTqgeNy0sHu2KUHiLvigsgyLcJ-aXKw'
 
 updater = Updater(token=TOKEN, use_context=True)
@@ -40,10 +40,22 @@ start_conversation_handler = ConversationHandler(
         CREATE_ADMIN: [MessageHandler(Filters.text, create_admin)],
         ADD_REMOVE_ADMIN: [MessageHandler(Filters.text, add_remove_admin)],
         DELETE_ADMIN: [MessageHandler(Filters.text, delete_admin)],
+        WRITE_NAME: [MessageHandler(Filters.text, write_name)],
+        SEND_PHONE: [MessageHandler(Filters.contact, send_phone)],
+    },
+    fallbacks = [CommandHandler('cancel', cancel)]
+)
+setting_conversation_handler = ConversationHandler(
+    entry_points = [MessageHandler(Filters.text(['Настройки', 'вернуться к настройкам']), settings)],
+    states = {
+        SETTINGS: [MessageHandler(Filters.text, setting_menus)], 
+        UPDATE_NAME: [MessageHandler(Filters.text, update_name)],
+        UPDATE_PHONE: [MessageHandler(Filters.text, update_phone)],
     },
     fallbacks = [CommandHandler('cancel', cancel)]
 )
 
+dp.add_handler(setting_conversation_handler)
 dp.add_handler(start_conversation_handler)
 dp.add_handler(create_conversation_handler)
 

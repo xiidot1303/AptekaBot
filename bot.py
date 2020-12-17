@@ -2,7 +2,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, ChatAction
 import xlrd
 import os
-from conversationList import GLOBAL_NAME, SELECT_DRUGS, SUPERADMIN, UPDATE_EXCEL, START, EDIT_ABOUT_US, UPDATE_ABOUT_US
+from conversationList import GLOBAL_NAME, SELECT_DRUGS, SUPERADMIN, UPDATE_EXCEL, START, EDIT_ABOUT_US, UPDATE_ABOUT_US, WRITE_NAME, SEND_PHONE
 import sqlite3
 from functions import sort_percent_grow, sort_price_grow, sort_price_wane, sort_percent_wane
 
@@ -36,15 +36,43 @@ def start(update, context):
         update.message.reply_text("hi admin", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт']], resize_keyboard=True))
         return SUPERADMIN
     else:
-        conn = sqlite3.connect('data.db')
-        c = conn.cursor()
-        c.execute("SELECT * FROM sort WHERE id={} ".format(update.message.chat.id))
-        if not c.fetchall():
-            c.execute("INSERT INTO sort VALUES ({}, 'цене', 'возрастание', 'возрастание')".format(update.message.chat.id))
+        c.execute("SELECT * FROM users WHERE id={}".format(update.message.chat.id))
+        user = c.fetchone()
+        if user:
+            update.message.reply_text("hi", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Настройки']], resize_keyboard=True))
+        else:
+            c.execute("INSERT INTO users VALUES ({}, 'x', 'x')".format(update.message.chat.id))
+            conn.commit()
+            conn.close()
+            update.message.reply_text('write your name:')
+            return WRITE_NAME
 
-        update.message.reply_text("hi", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Настройки']], resize_keyboard=True))
-    
-    
+    conn.commit()
+    conn.close()   
+
+#registr
+def write_name(update, context):
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute("""UPDATE users SET name = '{}' WHERE id={} """.format(update.message.text, update.message.chat.id))
+
+    conn.commit()
+    conn.close()
+    i_contact = KeyboardButton(text='send_contact', request_contact=True)
+    update.message.reply_text('ok send contact', reply_markup=ReplyKeyboardMarkup([[i_contact]], resize_keyboard=True))
+    return SEND_PHONE
+
+def send_phone(update, context):
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute("""UPDATE users SET phone_number = '{}' WHERE id={} """.format(str(update.message.contact.phone_number), update.message.chat.id))
+
+    conn.commit()
+    conn.close()
+    update.message.reply_text("hi", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Настройки']], resize_keyboard=True))
+    return ConversationHandler.END
+
+
 def global_name(update, context):
     bot = context.bot
     text = update.message.text 
