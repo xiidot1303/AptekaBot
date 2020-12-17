@@ -17,7 +17,7 @@ def issuperadmin(id):
         return False
 superadmin = 206261493
 def start(update, context):
-    print(update.message.date)
+    
     admins = []
     conn = sqlite3.connect('data.db')
     c = conn.cursor()
@@ -36,10 +36,14 @@ def start(update, context):
         update.message.reply_text("hi admin", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт']], resize_keyboard=True))
         return SUPERADMIN
     else:
+        conn = sqlite3.connect('data.db')
+        c = conn.cursor()
         c.execute("SELECT * FROM users WHERE id={}".format(update.message.chat.id))
         user = c.fetchone()
         if user:
             update.message.reply_text("hi", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Настройки']], resize_keyboard=True))
+            conn.commit()
+            conn.close()
         else:
             c.execute("INSERT INTO users VALUES ({}, 'x', 'x')".format(update.message.chat.id))
             conn.commit()
