@@ -6,8 +6,47 @@ from conversationList import GLOBAL_NAME, SELECT_DRUGS, SUPERADMIN, UPDATE_EXCEL
 from conversationList import UPDATE_OUR_SITE, CREATE_ADMIN, ADD_REMOVE_ADMIN, DELETE_ADMIN, WRITE_NAME, SEND_PHONE, SETTINGS, UPDATE_NAME, UPDATE_PHONE
 from functions import change_sort_type
 def find_drug(update, context):
-    update.message.reply_text('Введите название лекарства, а наш бот подскажет Вам возможные варианты:\n\nПример: анальгин\n(Минимум 3 символа)', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
-    return GLOBAL_NAME
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM access_to_find WHERE id={} ".format(update.message.chat.id))
+    f = update.message.date
+    d = ''
+    for x in str(f):
+        if x == ' ':
+            break
+        else:
+            d += x
+
+    if not c.fetchone():
+        
+        c.execute("INSERT INTO access_to_find VALUES ({}, '{}', 5)".format(update.message.chat.id, d))
+        conn.commit()
+        update.message.reply_text('write global name:', reply_markup = ReplyKeyboardMarkup(keyboard=[['cancel']], resize_keyboard=True))
+        conn.close()
+        return GLOBAL_NAME
+    else:
+        date = c.fetchone()[1]
+        chance = c.fetchone()[2]
+        y, m, last_day = date.split('-')
+        y1, m1, current_day = d.split('-')
+        print(last_day, current_day)
+        if last_day == current_day:
+            print('same')
+            if int(chance) <= 0:
+                print('main')
+                update.message.reply_text('no chancess to find.')
+                
+            else:
+                update.message.reply_text('write global name:', reply_markup = ReplyKeyboardMarkup(keyboard=[['cancel']], resize_keyboard=True))
+                conn.close()
+                return GLOBAL_NAME
+        else:
+            c.execute("""UPDATE access_to_find SET last_date = '{}' WHERE id={} """.format(current_day, update.message.chat.id))
+            c.execute("""UPDATE access_to_find SET chance = 5 WHERE id={} """.format(update.message.chat.id))
+            conn.commit()
+            update.message.reply_text('write global name:', reply_markup = ReplyKeyboardMarkup(keyboard=[['cancel']], resize_keyboard=True))
+            conn.close()
+            return GLOBAL_NAME
 
 def about_us(update, context):
     

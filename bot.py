@@ -138,8 +138,49 @@ def select_drugs(update, context):
         update.message.reply_text("Главное меню", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств🔎'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Настройки⚙️']], resize_keyboard=True))
         return ConversationHandler.END
     if name == 'Назад':
-        update.message.reply_text('Введите название лекарства, а наш бот подскажет Вам возможные варианты:\n\nПример: анальгин\n(Минимум 3 символа)', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
-        return GLOBAL_NAME
+        conn = sqlite3.connect('data.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM access_to_find WHERE id={} ".format(update.message.chat.id))
+        f = update.message.date
+        d = ''
+        for x in str(f):
+            if x == ' ':
+                break
+            else:
+                d += x
+
+        if not c.fetchone():
+
+            c.execute("INSERT INTO access_to_find VALUES ({}, '{}', 5)".format(update.message.chat.id, d))
+            conn.commit()
+            update.message.reply_text('Введите название лекарства, а наш бот подскажет Вам возможные варианты:\n\nПример: анальгин\n(Минимум 3 символа)', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
+            conn.close()
+            return GLOBAL_NAME
+        else:
+            date = c.fetchone()[1]
+            chance = c.fetchone()[2]
+            y, m, last_day = date.split('-')
+            y1, m1, current_day = d.split('-')
+            print(last_day, current_day)
+            if last_day == current_day:
+
+                if int(chance) <= 0:
+                    
+
+                    update.message.reply_text('Срок, установленный для поиска, истек.', reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств🔎'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Настройки⚙️']], resize_keyboard=True))
+                    return ConversationHandler.END
+                else:
+                    update.message.reply_text('Введите название лекарства, а наш бот подскажет Вам возможные варианты:\n\nПример: анальгин\n(Минимум 3 символа)', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
+                    conn.close()
+                    return GLOBAL_NAME
+            else:
+                c.execute("""UPDATE access_to_find SET last_date = '{}' WHERE id={} """.format(current_day, update.message.chat.id))
+                c.execute("""UPDATE access_to_find SET chance = 5 WHERE id={} """.format(update.message.chat.id))
+                conn.commit()
+                update.message.reply_text('Введите название лекарства, а наш бот подскажет Вам возможные варианты:\n\nПример: анальгин\n(Минимум 3 символа)', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
+                conn.close()
+                return GLOBAL_NAME
+
     else:
         bot.send_chat_action(chat_id=update.message.chat.id, action=ChatAction.TYPING)
         p = os.listdir()
