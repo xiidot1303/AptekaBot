@@ -9,9 +9,9 @@ def superadmin(update, context):
     text = update.message.text
     if text == 'Обновить Excel':
         mrk = ReplyKeyboardMarkup(keyboard=[['назад']], resize_keyboard=True)
-        update.message.reply_text("Send new file", reply_markup=mrk)
+        update.message.reply_text("отправьте новый файл", reply_markup=mrk)
         return UPDATE_EXCEL
-    elif text == 'О нас':
+    elif text == 'О нас🧾':
         
         conn = sqlite3.connect('data.db')
         c = conn.cursor()
@@ -23,7 +23,7 @@ def superadmin(update, context):
         conn.close()
         
         return EDIT_ABOUT_US
-    elif text == 'Наши партнеры':
+    elif text == 'Наши партнеры🤝':
         conn = sqlite3.connect('data.db')
         c = conn.cursor()
         c.execute("SELECT * FROM menus")
@@ -60,7 +60,7 @@ def superadmin(update, context):
             
                 n += 1
             
-            update.message.reply_text(admin_list, reply_markup=ReplyKeyboardMarkup(keyboard=[['add admin', 'remove', 'Назад']], resize_keyboard=True))
+            update.message.reply_text(admin_list, reply_markup=ReplyKeyboardMarkup(keyboard=[['добавить', 'удалять'], ['Назад']], resize_keyboard=True))
 
             conn.commit()
             conn.close()
@@ -69,14 +69,14 @@ def edit_our_site(update, context):
     text = update.message.text
     if text == 'Изменить':
         mrk = ReplyKeyboardRemove(remove_keyboard=True)
-        update.message.reply_text('Send new our site', reply_markup=mrk)
+        update.message.reply_text('Отправьте новый текст для меню "наш сайт"', reply_markup=mrk)
         return UPDATE_OUR_SITE
     elif text == 'Назад':
     
         if issuperadmin(update.message.chat.id):
-            update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
+            update.message.reply_text("главный админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
         else:
-            update.message.reply_text("hi admin", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт']], resize_keyboard=True))
+            update.message.reply_text("админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт']], resize_keyboard=True))
         return SUPERADMIN    
 def update_our_site(update, context):
     text = update.message.chat.id
@@ -88,9 +88,9 @@ def update_our_site(update, context):
     conn.commit()
     conn.close()
     if issuperadmin(update.message.chat.id):
-        update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
+        update.message.reply_text("гл. админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
     else:
-        update.message.reply_text("hi admin", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт']], resize_keyboard=True))
+        update.message.reply_text("админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт']], resize_keyboard=True))
     return SUPERADMIN    
 
 
@@ -99,14 +99,14 @@ def edit_our_partners(update, context):
     if text == 'Изменить':
         
         mrk = ReplyKeyboardRemove(remove_keyboard=True)
-        update.message.reply_text('Send new our partners ', reply_markup=mrk)
+        update.message.reply_text('Отправьте новый текст для меню «наши партнеры» ', reply_markup=mrk)
         return UPDATE_OUR_PARTNERS
     elif text == 'Назад':
         
         if issuperadmin(update.message.chat.id):
-            update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
+            update.message.reply_text("гл. админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
         else:
-            update.message.reply_text("hi admin", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт']], resize_keyboard=True))
+            update.message.reply_text("админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт']], resize_keyboard=True))
         return SUPERADMIN
 def update_our_partners(update, context):    
     conn = sqlite3.connect('data.db')
@@ -117,9 +117,9 @@ def update_our_partners(update, context):
     conn.commit()
     conn.close()
     if issuperadmin(update.message.chat.id):
-        update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
+        update.message.reply_text("гл. админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
     else:
-        update.message.reply_text("hi admin", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт']], resize_keyboard=True))
+        update.message.reply_text("админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт']], resize_keyboard=True))
     return SUPERADMIN    
 
 
@@ -129,14 +129,14 @@ def edit_about_us(update, context):
     if text == 'Изменить':
         
         mrk = ReplyKeyboardRemove(remove_keyboard=True)
-        update.message.reply_text('Send new about us ', reply_markup=mrk)
+        update.message.reply_text('Отправьте новый текст для меню «О нас» ', reply_markup=mrk)
         return UPDATE_ABOUT_US
     elif text == 'Назад':
     
         if issuperadmin(update.message.chat.id):
-            update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
+            update.message.reply_text("гл. админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
         else:
-            update.message.reply_text("hi admin", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт']], resize_keyboard=True))
+            update.message.reply_text("админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт']], resize_keyboard=True))
         return SUPERADMIN
 def update_about_us(update, context):
     
@@ -149,34 +149,34 @@ def update_about_us(update, context):
     conn.commit()
     conn.close()
     if issuperadmin(update.message.chat.id):
-        update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
+        update.message.reply_text("гл. админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
     else:
-        update.message.reply_text("hi admin", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт']], resize_keyboard=True))
+        update.message.reply_text("админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт']], resize_keyboard=True))
     return SUPERADMIN
 
 
 
 def add_remove_admin(update, context):
     text = update.message.text
-    if text == 'add admin':
-        update.message.reply_text('send forwrded message', reply_markup=ReplyKeyboardRemove(remove_keyboard = True))
+    if text == 'добавить':
+        update.message.reply_text('Отправьте переадресованное сообщение нового администратора', reply_markup=ReplyKeyboardRemove(remove_keyboard = True))
         return CREATE_ADMIN
-    if text == 'remove':
-        update.message.reply_text('pls. enter id admin:', reply_markup=ReplyKeyboardRemove(remove_keyboard = True))
+    if text == 'удалять':
+        update.message.reply_text('пожалуйста, введите ID администратора', reply_markup=ReplyKeyboardRemove(remove_keyboard = True))
         return DELETE_ADMIN
     elif text == 'Назад':
     
         if issuperadmin(update.message.chat.id):
-            update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
+            update.message.reply_text("гл. админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
         else:
-            update.message.reply_text("hi admin", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт']], resize_keyboard=True))
+            update.message.reply_text("админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт']], resize_keyboard=True))
         return SUPERADMIN
 
 
 def create_admin(update, context):
     print(update.message.forward_from)
     if update.message.forward_from == None:
-        update.message.reply_text('such user dont permitted forward theri messages')
+        update.message.reply_text('этот пользователь отключил пересылку сообщений. Мы просим бота временно отключить эту функцию, чтобы стать администратором\nПосле исправления настроек отправьте новое переадресованное сообщение:')
         return CREATE_ADMIN
     
     else:
@@ -193,7 +193,7 @@ def create_admin(update, context):
         
         conn.commit()
         conn.close()
-        update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
+        update.message.reply_text("гл. админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
         return SUPERADMIN
 
 
@@ -208,7 +208,7 @@ def delete_admin(update, context):
         
         conn.commit()
         conn.close()
-        update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
+        update.message.reply_text("гл. админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
         return SUPERADMIN
     except:
         update.message.reply_text('error, write correct')

@@ -29,11 +29,11 @@ def start(update, context):
     conn.commit()
     conn.close()   
     if update.message.chat.id == superadmin:
-        update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
+        update.message.reply_text("вас приветствует главный админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
         
         return SUPERADMIN
     elif update.message.chat.id in admins:
-        update.message.reply_text("hi admin", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт']], resize_keyboard=True))
+        update.message.reply_text("вас приветствует админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт']], resize_keyboard=True))
         return SUPERADMIN
     else:
         conn = sqlite3.connect('data.db')
@@ -41,14 +41,14 @@ def start(update, context):
         c.execute("SELECT * FROM users WHERE id={}".format(update.message.chat.id))
         user = c.fetchone()
         if user:
-            update.message.reply_text("hi", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Настройки']], resize_keyboard=True))
+            update.message.reply_text("Вас приветствует бот по поиску лекарств о компании название компании", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств🔎'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Настройки⚙️']], resize_keyboard=True))
             conn.commit()
             conn.close()
         else:
             c.execute("INSERT INTO users VALUES ({}, 'x', 'x')".format(update.message.chat.id))
             conn.commit()
             conn.close()
-            update.message.reply_text('write your name:')
+            update.message.reply_text('напишите свое имя')
             return WRITE_NAME
 
     conn.commit()
@@ -62,8 +62,8 @@ def write_name(update, context):
 
     conn.commit()
     conn.close()
-    i_contact = KeyboardButton(text='send_contact', request_contact=True)
-    update.message.reply_text('ok send contact', reply_markup=ReplyKeyboardMarkup([[i_contact]], resize_keyboard=True))
+    i_contact = KeyboardButton(text='отправить ', request_contact=True)
+    update.message.reply_text('Хорошо, отправьте номер телефона', reply_markup=ReplyKeyboardMarkup([[i_contact]], resize_keyboard=True))
     return SEND_PHONE
 
 def send_phone(update, context):
@@ -73,7 +73,7 @@ def send_phone(update, context):
 
     conn.commit()
     conn.close()
-    update.message.reply_text("hi", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Настройки']], resize_keyboard=True))
+    update.message.reply_text("Вас приветствует бот по поиску лекарств о компании название компании", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств🔎'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Настройки⚙️']], resize_keyboard=True))
     return ConversationHandler.END
 
 
@@ -81,7 +81,7 @@ def global_name(update, context):
     bot = context.bot
     text = update.message.text 
     if text == 'Назад':
-        update.message.reply_text("hi", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Настройки']], resize_keyboard=True))
+        update.message.reply_text("Главное меню", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств🔎'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Настройки⚙️']], resize_keyboard=True))
         return ConversationHandler.END
     else:
         bot.send_chat_action(chat_id=update.message.chat.id, action=ChatAction.TYPING)
@@ -118,7 +118,7 @@ def global_name(update, context):
         texts = []
         if not r:
             mrk = [[KeyboardButton(text='Назад')]]
-            update.message.reply_text('no drugs, reenter', reply_markup=ReplyKeyboardMarkup(mrk, resize_keyboard=True, one_time_keyboard=True))
+            update.message.reply_text('Ничего не найдено, попробуйте еще раз', reply_markup=ReplyKeyboardMarkup(mrk, resize_keyboard=True, one_time_keyboard=True))
             return GLOBAL_NAME
         else:
             for i in r:
@@ -127,7 +127,7 @@ def global_name(update, context):
                     texts.append(w[0])
                     items.append([KeyboardButton(text=w[0])])
             items.append([KeyboardButton(text='Назад'), KeyboardButton(text='Главная')])
-            update.message.reply_text('select drug name', reply_markup=ReplyKeyboardMarkup(items, resize_keyboard=True, one_time_keyboard=True))
+            update.message.reply_text('Пожалуйста, выберите лекарство из предоставленного списка.', reply_markup=ReplyKeyboardMarkup(items, resize_keyboard=True, one_time_keyboard=True))
             return SELECT_DRUGS
     
 
@@ -135,10 +135,10 @@ def select_drugs(update, context):
     bot = context.bot
     name = update.message.text
     if name == 'Главная':
-        update.message.reply_text("hi", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Настройки']], resize_keyboard=True))
+        update.message.reply_text("Главное меню", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств🔎'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Настройки⚙️']], resize_keyboard=True))
         return ConversationHandler.END
     if name == 'Назад':
-        update.message.reply_text('write global name:', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
+        update.message.reply_text('Введите название лекарства, а наш бот подскажет Вам возможные варианты:\n\nПример: анальгин\n(Минимум 3 символа)', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
         return GLOBAL_NAME
     else:
         bot.send_chat_action(chat_id=update.message.chat.id, action=ChatAction.TYPING)
@@ -195,7 +195,7 @@ def select_drugs(update, context):
                 w[4] = 'ожидаемый'
             results += '\nНазвания: ' + w[0] + '\nПроизводитель: ' + w[9] + '({})'.format(w[10]) + '\nАдрес:' + find_address(w[8]) + '\nЦена сум: ' + str(w[4]) + '\nЦена в долларах США: ' + str(w[5]) + '\nЦена в ЕВРО: ' + str(w[6]) + '\nТелефон: '+ find_phone(w[8]) + '\n\n\n\n\n'
         
-        results = 'дата загрузки прайса: ' + d + results
+        results = 'Дата загрузки прайса: ' + d + '\n' + results
         bot.send_message(update.message.chat.id, results)
         
         return SELECT_DRUGS        
@@ -267,9 +267,9 @@ def doc(update, context):
 def update_excel(update, context):
     if not update.message.text == None:
         if issuperadmin(update.message.chat.id):
-            update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
+            update.message.reply_text("главный админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
         else:
-            update.message.reply_text("hi admin", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас'], ['Наши партнеры'], ['Наш сайт']], resize_keyboard=True))
+            update.message.reply_text("админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт']], resize_keyboard=True))
         return SUPERADMIN    
     else:
         p = os.listdir()
@@ -286,8 +286,10 @@ def update_excel(update, context):
         bot = context.bot
         doc = bot.get_file(update.message.document.file_id)
         doc.download(update.message.document.file_name)
-        update.message.reply_text("hi super", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас '], ['Наши партнеры'], ['Наш сайт'], ['Добавить админ']], resize_keyboard=True))
-
+        if issuperadmin(update.message.chat.id):
+            update.message.reply_text("главный админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
+        else:
+            update.message.reply_text("админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт']], resize_keyboard=True))
         return SUPERADMIN
 
 def cancel(update, context):

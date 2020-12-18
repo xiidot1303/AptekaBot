@@ -15,7 +15,7 @@ dp = updater.dispatcher
 
 
 create_conversation_handler = ConversationHandler(
-    entry_points = [MessageHandler(Filters.text('Поиск лекарств'), find_drug)],
+    entry_points = [MessageHandler(Filters.text('Поиск лекарств🔎'), find_drug)],
     states = {
         # GET_BILL_DETAILS: [MessageHandler(Filters.text,get_bill_details)],
         GLOBAL_NAME: [MessageHandler(Filters.text, global_name)],
@@ -46,7 +46,7 @@ start_conversation_handler = ConversationHandler(
     fallbacks = [CommandHandler('cancel', cancel)]
 )
 setting_conversation_handler = ConversationHandler(
-    entry_points = [MessageHandler(Filters.text(['Настройки', 'вернуться к настройкам']), settings)],
+    entry_points = [MessageHandler(Filters.text(['Настройки⚙️', 'вернуться к настройкам']), settings)],
     states = {
         SETTINGS: [MessageHandler(Filters.text, setting_menus)], 
         UPDATE_NAME: [MessageHandler(Filters.text, update_name)],
@@ -63,10 +63,10 @@ dp.add_handler(MessageHandler(Filters.document, doc))
 dp.add_handler(CallbackQueryHandler(callback))
 #menus
 
-dp.add_handler(MessageHandler(Filters.text('О нас'), about_us))
-dp.add_handler(MessageHandler(Filters.text('Наши партнеры'), our_partners))
+dp.add_handler(MessageHandler(Filters.text('О нас🧾'), about_us))
+dp.add_handler(MessageHandler(Filters.text('Наши партнеры🤝'), our_partners))
 dp.add_handler(MessageHandler(Filters.text('Наш сайт'), our_site))
-dp.add_handler(MessageHandler(Filters.text('Настройки'), settings))
+
 dp.add_handler(MessageHandler(Filters.forwarded, forward))
 updater.start_webhook(listen='127.0.0.1',
                       port=40404,
