@@ -21,7 +21,7 @@ def find_drug(update, context):
         
         c.execute("INSERT INTO access_to_find VALUES ({}, '{}', 5)".format(update.message.chat.id, d))
         conn.commit()
-        update.message.reply_text('write global name:', reply_markup = ReplyKeyboardMarkup(keyboard=[['cancel']], resize_keyboard=True))
+        update.message.reply_text('Введите название лекарства, а наш бот подскажет Вам возможные варианты:\n\nПример: анальгин\n(Минимум 3 символа)', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
         conn.close()
         return GLOBAL_NAME
     else:
@@ -31,20 +31,20 @@ def find_drug(update, context):
         y1, m1, current_day = d.split('-')
         print(last_day, current_day)
         if last_day == current_day:
-            print('same')
+        
             if int(chance) <= 0:
-                print('main')
-                update.message.reply_text('no chancess to find.')
+                
+                update.message.reply_text('Лимит на ежедневный поиск 5 раз\nВы использовали все это')
                 
             else:
-                update.message.reply_text('write global name:', reply_markup = ReplyKeyboardMarkup(keyboard=[['cancel']], resize_keyboard=True))
+                update.message.reply_text('Введите название лекарства, а наш бот подскажет Вам возможные варианты:\n\nПример: анальгин\n(Минимум 3 символа)', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
                 conn.close()
                 return GLOBAL_NAME
         else:
             c.execute("""UPDATE access_to_find SET last_date = '{}' WHERE id={} """.format(current_day, update.message.chat.id))
             c.execute("""UPDATE access_to_find SET chance = 5 WHERE id={} """.format(update.message.chat.id))
             conn.commit()
-            update.message.reply_text('write global name:', reply_markup = ReplyKeyboardMarkup(keyboard=[['cancel']], resize_keyboard=True))
+            update.message.reply_text('Введите название лекарства, а наш бот подскажет Вам возможные варианты:\n\nПример: анальгин\n(Минимум 3 символа)', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
             conn.close()
             return GLOBAL_NAME
 

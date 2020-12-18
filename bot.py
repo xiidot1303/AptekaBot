@@ -174,7 +174,7 @@ def select_drugs(update, context):
                 if int(chance) <= 0:
                     
 
-                    update.message.reply_text('Срок, установленный для поиска, истек.', reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств🔎'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Настройки⚙️']], resize_keyboard=True))
+                    update.message.reply_text('Лимит на ежедневный поиск 5 раз\nВы использовали все это', reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств🔎'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Настройки⚙️']], resize_keyboard=True))
                     return ConversationHandler.END
                 else:
                     update.message.reply_text('Введите название лекарства, а наш бот подскажет Вам возможные варианты:\n\nПример: анальгин\n(Минимум 3 символа)', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
