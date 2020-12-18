@@ -42,7 +42,7 @@ def find_drug(update, context):
                 conn.close()
                 return GLOBAL_NAME
         else:
-            c.execute("""UPDATE access_to_find SET last_date = '{}' WHERE id={} """.format(current_day, update.message.chat.id))
+            c.execute("""UPDATE access_to_find SET last_date = '{}' WHERE id={} """.format(d, update.message.chat.id))
             c.execute("""UPDATE access_to_find SET chance = 5 WHERE id={} """.format(update.message.chat.id))
             conn.commit()
             update.message.reply_text('Введите название лекарства, а наш бот подскажет Вам возможные варианты:\n\nПример: анальгин\n(Минимум 3 символа)', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
