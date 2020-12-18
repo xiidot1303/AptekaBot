@@ -128,6 +128,13 @@ def global_name(update, context):
                     items.append([KeyboardButton(text=w[0])])
             items.append([KeyboardButton(text='Назад'), KeyboardButton(text='Главная')])
             update.message.reply_text('Пожалуйста, выберите лекарство из предоставленного списка.', reply_markup=ReplyKeyboardMarkup(items, resize_keyboard=True, one_time_keyboard=True))
+            conn = sqlite3.connect('data.db')
+            c = conn.cursor()
+            c.execute("SELECT * FROM access_to_find WHERE id={} ".format(update.message.chat.id))
+            n = c.fetchone()[2]
+            c.execute("""UPDATE access_to_find SET chance = {} WHERE id={} """.format(int(n)-1, update.message.chat.id))
+            conn.commit()
+            conn.close()
             return SELECT_DRUGS
     
 
