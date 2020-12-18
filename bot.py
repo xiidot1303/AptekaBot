@@ -149,6 +149,7 @@ def select_drugs(update, context):
         c = conn.cursor()
         c.execute("SELECT * FROM access_to_find WHERE id={} ".format(update.message.chat.id))
         f = update.message.date
+        fetchone = c.fetchone()
         d = ''
         for x in str(f):
             if x == ' ':
@@ -156,7 +157,7 @@ def select_drugs(update, context):
             else:
                 d += x
 
-        if not c.fetchone():
+        if not fetchone:
 
             c.execute("INSERT INTO access_to_find VALUES ({}, '{}', 5)".format(update.message.chat.id, d))
             conn.commit()
@@ -164,8 +165,8 @@ def select_drugs(update, context):
             conn.close()
             return GLOBAL_NAME
         else:
-            date = c.fetchone()[1]
-            chance = c.fetchone()[2]
+            date = fetchone[1]
+            chance = fetchone[2]
             y, m, last_day = date.split('-')
             y1, m1, current_day = d.split('-')
             print(last_day, current_day)

@@ -9,6 +9,7 @@ def find_drug(update, context):
     conn = sqlite3.connect('data.db')
     c = conn.cursor()
     c.execute("SELECT * FROM access_to_find WHERE id={} ".format(update.message.chat.id))
+    fetchone = c.fetchone()
     f = update.message.date
     d = ''
     for x in str(f):
@@ -17,7 +18,7 @@ def find_drug(update, context):
         else:
             d += x
 
-    if not c.fetchone():
+    if not fetchone:
         
         c.execute("INSERT INTO access_to_find VALUES ({}, '{}', 5)".format(update.message.chat.id, d))
         conn.commit()
@@ -25,8 +26,8 @@ def find_drug(update, context):
         conn.close()
         return GLOBAL_NAME
     else:
-        date = c.fetchone()[1]
-        chance = c.fetchone()[2]
+        date = fetchone[1]
+        chance = fetchone[2]
         y, m, last_day = date.split('-')
         y1, m1, current_day = d.split('-')
         print(last_day, current_day)
