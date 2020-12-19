@@ -121,8 +121,9 @@ def update_our_partners(update, context):
         if i[-3::] == 'xls' or i[-4::] == 'xlsx':
             path = i
             break
-    os.remove('our_partners/'+path)
     bot.send_message(update.message.chat.id, 'our_partners/'+path)
+    os.remove('our_partners/'+path)
+    
     doc = bot.get_file(update.message.document.file_id)
     doc.download('our_partners/'+update.message.document.file_name)
     if issuperadmin(update.message.chat.id):
