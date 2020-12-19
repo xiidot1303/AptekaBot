@@ -58,7 +58,7 @@ def about_us(update, context):
     conn.commit()
     conn.close()
 
-def our_partners(update, message):
+def our_partners(update, context):
     bot = context.bot
     p = os.listdir('our_partners')
     for i in p:
