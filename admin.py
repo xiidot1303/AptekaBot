@@ -27,15 +27,16 @@ def superadmin(update, context):
         return EDIT_ABOUT_US
     elif text == 'Наши партнеры🤝':
         p = os.listdir('our_partners')
-        update.message.reply_text(p)
+    
         for i in p:
             if i[-3::] == 'xls' or i[-4::] == 'xlsx':
                 path = i
                 break
-        update.message.reply_text(path)
+    
         i_edit = KeyboardButton(text='Изменить')
         i_cancel = KeyboardButton(text='Назад')
-        bot.send_document(update.message.chat.id, 'our_partners/'+path, reply_markup=ReplyKeyboardMarkup([[i_edit, i_cancel]], resize_keyboard=True, one_time_keyboard=True))
+        f = open('our_partners/'+path, 'rb')
+        bot.send_document(update.message.chat.id, f, reply_markup=ReplyKeyboardMarkup([[i_edit, i_cancel]], resize_keyboard=True, one_time_keyboard=True))
 
         return EDIT_OUR_PARTNERS
     elif text == 'Наш сайт':
