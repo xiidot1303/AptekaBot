@@ -5,6 +5,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMa
 from conversationList import GLOBAL_NAME, SELECT_DRUGS, SUPERADMIN, UPDATE_EXCEL, START, EDIT_ABOUT_US, UPDATE_ABOUT_US, EDIT_OUR_PARTNERS, UPDATE_OUR_PARTNERS, EDIT_OUR_SITE
 from conversationList import UPDATE_OUR_SITE, CREATE_ADMIN, ADD_REMOVE_ADMIN, DELETE_ADMIN, WRITE_NAME, SEND_PHONE, SETTINGS, UPDATE_NAME, UPDATE_PHONE
 from functions import change_sort_type
+import os
 def find_drug(update, context):
     conn = sqlite3.connect('data.db')
     c = conn.cursor()
@@ -61,7 +62,6 @@ def about_us(update, context):
 def our_partners(update, context):
     bot = context.bot
     p = os.listdir('our_partners')
-    update.message.reply_text(p)
     for i in p:
         if i[-3::] == 'xls' or i[-4::] == 'xlsx':
             path = i
