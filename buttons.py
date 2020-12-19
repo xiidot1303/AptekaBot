@@ -83,7 +83,7 @@ def our_site(update, context):
 # settings
 def settings(update, context):
     
-    update.message.reply_text('Настройки\nВы можете изменить свое имя и номер телефона в меню «Профиль».\nА также настройки сортировки данных.', reply_markup=ReplyKeyboardMarkup(keyboard=[['Профиль'], ['Сортировки'], ['Назад⬅️']], resize_keyboard=True))
+    update.message.reply_text('Тут вы можете сменить номер телефона или имя. Для этого перейдите в раздел "Профиль"\nТак же можно изменить порядок сортировки при поиске лекарств, для этого нажмите на кнопку "Настроить сортировку"', reply_markup=ReplyKeyboardMarkup(keyboard=[['Профиль'], ['Настроить сортировку'], ['Назад⬅️']], resize_keyboard=True))
     return SETTINGS
 
 
@@ -96,31 +96,31 @@ def setting_menus(update, context):
     if text == 'Профиль':
         c.execute("SELECT * FROM users WHERE id={}".format(update.message.chat.id))
         obj = c.fetchone()
-        update.message.reply_text('Имя: {} \n Номер телефон: {}  '.format(obj[1], obj[2]), reply_markup=ReplyKeyboardMarkup(keyboard=[['изменить имя'], ['изменить номер телефона'], ['назад⏪']], resize_keyboard=True))
-    if text == 'изменить имя':
-        update.message.reply_text('напишите новое имя:', reply_markup=ReplyKeyboardRemove(remove_keyboard = True))
+        update.message.reply_text('Имя: {} \n Номер телефон: {}  '.format(obj[1], obj[2]), reply_markup=ReplyKeyboardMarkup(keyboard=[['Изменить имя'], ['Изменить номер телефона'], ['назад⏪']], resize_keyboard=True))
+    if text == 'Изменить имя':
+        update.message.reply_text('Напишите новое имя:', reply_markup=ReplyKeyboardRemove(remove_keyboard = True))
         return UPDATE_NAME
-    if text == 'изменить номер телефона':
-        update.message.reply_text('напишите новый номер телефона', reply_markup=ReplyKeyboardRemove(remove_keyboard = True))
+    if text == 'Изменить номер телефона':
+        update.message.reply_text('Напишите новый номер телефона', reply_markup=ReplyKeyboardRemove(remove_keyboard = True))
         return UPDATE_PHONE
     if text == 'назад⏪':
-        update.message.reply_text('Настройки\nВы можете изменить свое имя и номер телефона в меню «Профиль».\nА также настройки сортировки данных.', reply_markup=ReplyKeyboardMarkup(keyboard=[['Профиль'], ['Сортировки'], ['Назад⬅️']], resize_keyboard=True))
+        update.message.reply_text('Тут вы можете сменить номер телефона или имя. Для этого перейдите в раздел "Профиль"\nТак же можно изменить порядок сортировки при поиске лекарств, для этого нажмите на кнопку "Настроить сортировку"', reply_markup=ReplyKeyboardMarkup(keyboard=[['Профиль'], ['Настроить сортировку'], ['Назад⬅️']], resize_keyboard=True))
         return SETTINGS
     if text == 'Назад⬅️':
         update.message.reply_text("Вас приветствует бот по поиску лекарств о компании название компании", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств🔎'], ['О нас🔎'], ['Наши партнеры🤝'], ['Наш сайт'], ['Настройки⚙️']], resize_keyboard=True))
         return ConversationHandler.END
-    if text == 'Сортировки':   #sort
+    if text == 'Настроить сортировку':   #sort
         c.execute("SELECT * FROM sort WHERE id={} ".format(update.message.chat.id))
-        mrk = ReplyKeyboardMarkup(keyboard=[['вернуться к настройкам']], resize_keyboard=True)
-        update.message.reply_text('настройка сортировки', reply_markup=mrk)
+        mrk = ReplyKeyboardMarkup(keyboard=[['Вернуться к настройкам']], resize_keyboard=True)
+        update.message.reply_text('Раздел настроек для сортировки препаратов при поиске.', reply_markup=mrk)
         
         if not c.fetchall():
-            print(2)
+        
             c.execute("INSERT INTO sort VALUES ({}, 'цене', 'возрастание', 'возрастание')".format(update.message.chat.id))
-            i_by_price = InlineKeyboardButton(text='сортировать по цене', callback_data='by_price')
-            i_by_procent = InlineKeyboardButton(text='сортировать по процентам', callback_data='by_procent')
+            i_by_price = InlineKeyboardButton(text='Сортировать по цене', callback_data='by_price')
+            i_by_procent = InlineKeyboardButton(text='Сортировать по процентам', callback_data='by_procent')
 
-            update.message.reply_text('Ваша сортировка по: цене \nпо:   возрастание', reply_markup=InlineKeyboardMarkup([[i_by_price], [i_by_procent]]))
+            update.message.reply_text('Выбрана настройка сортировки "по цене", сортироваться будет по возрастание', reply_markup=InlineKeyboardMarkup([[i_by_price], [i_by_procent]]))
     
         else:
             
@@ -132,9 +132,9 @@ def setting_menus(update, context):
             elif obj[1] == 'процентам':
                 price_or_procent = obj[3]
 
-            i_by_price = InlineKeyboardButton(text='сортировать по цене', callback_data='by_price')
-            i_by_procent = InlineKeyboardButton(text='сортировать по процентам', callback_data='by_procent')
-            update.message.reply_text('Ваша сортировка по: {} \nпо:   {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_by_price], [i_by_procent]]))
+            i_by_price = InlineKeyboardButton(text='Сортировать по цене', callback_data='by_price')
+            i_by_procent = InlineKeyboardButton(text='Сортировать по процентам', callback_data='by_procent')
+            update.message.reply_text('Выбрана настройка сортировки по {}, сортироваться будет по {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_by_price], [i_by_procent]]))
     
     
         conn.commit()
@@ -152,7 +152,7 @@ def update_name(update, context):
     conn.commit()
     c.execute("SELECT * FROM users WHERE id={}".format(update.message.chat.id))
     obj = c.fetchone()
-    update.message.reply_text('Имя: {} \n Номер телефон: {}  '.format(obj[1], obj[2]), reply_markup=ReplyKeyboardMarkup(keyboard=[['изменить имя'], ['изменить номер телефона'], ['назад⏪']], resize_keyboard=True))
+    update.message.reply_text('Имя: {} \n Номер телефон: {}  '.format(obj[1], obj[2]), reply_markup=ReplyKeyboardMarkup(keyboard=[['Изменить имя'], ['Изменить номер телефона'], ['назад⏪']], resize_keyboard=True))
     
     conn.close()
     
@@ -166,7 +166,7 @@ def update_phone(update, context):
     conn.commit()
     c.execute("SELECT * FROM users WHERE id={}".format(update.message.chat.id))
     obj = c.fetchone()
-    update.message.reply_text('Имя: {} \n Номер телефон: {}  '.format(obj[1], obj[2]), reply_markup=ReplyKeyboardMarkup(keyboard=[['изменить имя'], ['изменить номер телефона'], ['назад⏪']], resize_keyboard=True))
+    update.message.reply_text('Имя: {} \n Номер телефон: {}  '.format(obj[1], obj[2]), reply_markup=ReplyKeyboardMarkup(keyboard=[['Изменить имя'], ['Изменить номер телефона'], ['назад⏪']], resize_keyboard=True))
     
     conn.close()
     

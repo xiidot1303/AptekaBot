@@ -46,7 +46,7 @@ start_conversation_handler = ConversationHandler(
     fallbacks = [CommandHandler('cancel', cancel)]
 )
 setting_conversation_handler = ConversationHandler(
-    entry_points = [MessageHandler(Filters.text(['Настройки⚙️', 'вернуться к настройкам']), settings)],
+    entry_points = [MessageHandler(Filters.text(['Настройки⚙️', 'Вернуться к настройкам']), settings)],
     states = {
         SETTINGS: [MessageHandler(Filters.text, setting_menus)], 
         UPDATE_NAME: [MessageHandler(Filters.text, update_name)],

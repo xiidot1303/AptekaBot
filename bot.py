@@ -29,11 +29,11 @@ def start(update, context):
     conn.commit()
     conn.close()   
     if update.message.chat.id == superadmin:
-        update.message.reply_text("вас приветствует главный админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
+        update.message.reply_text("Вас приветствует главный админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
         
         return SUPERADMIN
     elif update.message.chat.id in admins:
-        update.message.reply_text("вас приветствует админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт']], resize_keyboard=True))
+        update.message.reply_text("Вас приветствует админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт']], resize_keyboard=True))
         return SUPERADMIN
     else:
         conn = sqlite3.connect('data.db')
@@ -48,7 +48,7 @@ def start(update, context):
             c.execute("INSERT INTO users VALUES ({}, 'x', 'x')".format(update.message.chat.id))
             conn.commit()
             conn.close()
-            update.message.reply_text('напишите свое имя')
+            update.message.reply_text('Напишите свое имя')
             return WRITE_NAME
 
     conn.commit()
@@ -242,7 +242,7 @@ def select_drugs(update, context):
         for w in all:
             if w[4] == 0:
                 w[4] = 'ожидаемый'
-            results += '\nНазвания: ' + w[0] + '\nПроизводитель: ' + w[9] + '({})'.format(w[10]) + '\nАдрес:' + find_address(w[8]) + '\nЦена сум: ' + str(w[4]) + '\nЦена в долларах США: ' + str(w[5]) + '\nЦена в ЕВРО: ' + str(w[6]) + '\nТелефон: '+ find_phone(w[8]) + '\n\n\n\n\n'
+            results += '\nНазвания: ' + w[0] + '\nПроизводитель: ' + w[9] + '({})'.format(w[10]) + '\nАдрес:' + find_address(w[8]) + '\nЦена сум: ' + str(w[4]) + '\nЦена в долларах США: ' + str(w[5]) + '\nЦена в ЕВРО: ' + str(w[6]) + '\nТелефон: '+ find_phone(w[8]) + '\n\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n\n'
         
         results = 'Дата загрузки прайса: ' + d + '\n' + results
         bot.send_message(update.message.chat.id, results)
@@ -272,7 +272,7 @@ def find_address(title):
             break
         c += 1
     else:
-        return ''
+        return 'Не указан'
 
 def find_phone(title):
     print('find_phone')
@@ -296,7 +296,7 @@ def find_phone(title):
             break
         c += 1
     else:
-        return ''
+        return 'Не указан'
 
 
 

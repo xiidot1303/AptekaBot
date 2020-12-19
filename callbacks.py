@@ -12,16 +12,16 @@ def callback(update, context):
     c = conn.cursor()
     #price
     if cq.data == 'by_price':
-        i_wane = InlineKeyboardButton(text='убывание', callback_data='price_to_убывание')
-        i_grow = InlineKeyboardButton(text='возрастание', callback_data='price_to_возрастание')
-        i_cancel = InlineKeyboardButton(text='Назад', callback_data='sort')
-        cq.edit_message_text('sort price po', reply_markup=InlineKeyboardMarkup([[i_grow], [i_wane], [i_cancel]]))
-
-    if cq.data == 'by_procent':
-        i_wane = InlineKeyboardButton(text='убывание', callback_data='procent_to_убывание')
-        i_grow = InlineKeyboardButton(text='возрастание', callback_data='procent_to_возрастание')
+        i_wane = InlineKeyboardButton(text='По убыванию', callback_data='price_to_убывание')
+        i_grow = InlineKeyboardButton(text='По возрастанию', callback_data='price_to_возрастание')
         i_cancel = InlineKeyboardButton(text='Назад', callback_data='sort')
         cq.edit_message_text('Сортировать цены по:', reply_markup=InlineKeyboardMarkup([[i_grow], [i_wane], [i_cancel]]))
+
+    if cq.data == 'by_procent':
+        i_wane = InlineKeyboardButton(text='По убыванию', callback_data='procent_to_убывание')
+        i_grow = InlineKeyboardButton(text='По возрастанию', callback_data='procent_to_возрастание')
+        i_cancel = InlineKeyboardButton(text='Назад', callback_data='sort')
+        cq.edit_message_text('Сортировать проценты по:', reply_markup=InlineKeyboardMarkup([[i_grow], [i_wane], [i_cancel]]))
 
 
     if cq.data == 'price_to_убывание':
@@ -37,9 +37,9 @@ def callback(update, context):
         elif obj[1] == 'процентам':
             price_or_procent = obj[3]
         
-        i_by_price = InlineKeyboardButton(text='сортировать по цене', callback_data='by_price')
-        i_by_procent = InlineKeyboardButton(text='сортировать по процентам', callback_data='by_procent')
-        cq.edit_message_text('Ваша сортировка по: {} \nпо:   {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_by_price], [i_by_procent]]))
+        i_by_price = InlineKeyboardButton(text='Сортировать по цене', callback_data='by_price')
+        i_by_procent = InlineKeyboardButton(text='Сортировать по процентам', callback_data='by_procent')
+        cq.edit_message_text('Выбрана настройка сортировки по {}, сортироваться будет по {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_by_price], [i_by_procent]]))
     if cq.data == 'price_to_возрастание':
         
         c.execute("""UPDATE sort SET price = 'возрастание' WHERE id={} """.format(cq.message.chat.id))
@@ -53,9 +53,9 @@ def callback(update, context):
         elif obj[1] == 'процентам':
             price_or_procent = obj[3]
         
-        i_by_price = InlineKeyboardButton(text='сортировать по цене', callback_data='by_price')
-        i_by_procent = InlineKeyboardButton(text='сортировать по процентам', callback_data='by_procent')
-        cq.edit_message_text('Ваша сортировка по: {} \nпо:   {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_by_price], [i_by_procent]]))
+        i_by_price = InlineKeyboardButton(text='Сортировать по цене', callback_data='by_price')
+        i_by_procent = InlineKeyboardButton(text='Сортировать по процентам', callback_data='by_procent')
+        cq.edit_message_text('Выбрана настройка сортировки по {}, сортироваться будет по {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_by_price], [i_by_procent]]))
 
     if cq.data == 'procent_to_убывание':
 
@@ -70,9 +70,9 @@ def callback(update, context):
         elif obj[1] == 'процентам':
             price_or_procent = obj[3]
         
-        i_by_price = InlineKeyboardButton(text='сортировать по цене', callback_data='by_price')
-        i_by_procent = InlineKeyboardButton(text='сортировать по процентам', callback_data='by_procent')
-        cq.edit_message_text('Ваша сортировка по: {} \nпо:   {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_by_price], [i_by_procent]]))
+        i_by_price = InlineKeyboardButton(text='Сортировать по цене', callback_data='by_price')
+        i_by_procent = InlineKeyboardButton(text='Сортировать по процентам', callback_data='by_procent')
+        cq.edit_message_text('Выбрана настройка сортировки по {}, сортироваться будет по {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_by_price], [i_by_procent]]))
     
     if cq.data == 'procent_to_возрастание':
         
@@ -87,9 +87,9 @@ def callback(update, context):
         elif obj[1] == 'процентам':
             price_or_procent = obj[3]
         
-        i_by_price = InlineKeyboardButton(text='сортировать по цене', callback_data='by_price')
-        i_by_procent = InlineKeyboardButton(text='сортировать по процентам', callback_data='by_procent')
-        cq.edit_message_text('Ваша сортировка по: {} \nпо:   {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_by_price], [i_by_procent]]))
+        i_by_price = InlineKeyboardButton(text='Сортировать по цене', callback_data='by_price')
+        i_by_procent = InlineKeyboardButton(text='Сортировать по процентам', callback_data='by_procent')
+        cq.edit_message_text('Выбрана настройка сортировки по {}, сортироваться будет по {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_by_price], [i_by_procent]]))
     if cq.data == 'sort':
         c.execute("SELECT * FROM sort WHERE id={} ".format(cq.message.chat.id))
         obj = c.fetchall()[0]
@@ -99,11 +99,11 @@ def callback(update, context):
         elif obj[1] == 'процентам':
             price_or_procent = obj[3]
         
-        i_by_price = InlineKeyboardButton(text='сортировать по цене', callback_data='by_price')
-        i_by_procent = InlineKeyboardButton(text='сортировать по процентам', callback_data='by_procent')
-        cq.edit_message_text('Ваша сортировка по: {} \nпо:   {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_by_price], [i_by_procent]]))
+        i_by_price = InlineKeyboardButton(text='Сортировать по цене', callback_data='by_price')
+        i_by_procent = InlineKeyboardButton(text='Сортировать по процентам', callback_data='by_procent')
+        cq.edit_message_text('Выбрана настройка сортировки по {}, сортироваться будет по {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_by_price], [i_by_procent]]))
     if cq.data == 'settings':        
-        bot.send_message(cq.message.chat.id, 'Настройки\nВы можете изменить свое имя и номер телефона в меню «Профиль».\nА также настройки сортировки данных.', reply_markup=ReplyKeyboardMarkup(keyboard=[['Профиль'], ['Сортировки'], ['Назад⬅️']], resize_keyboard=True))
+        bot.send_message(cq.message.chat.id, 'Тут вы можете сменить номер телефона или имя. Для этого перейдите в раздел "Профиль"\nТак же можно изменить порядок сортировки при поиске лекарств, для этого нажмите на кнопку "Настроить сортировку"', reply_markup=ReplyKeyboardMarkup(keyboard=[['Профиль'], ['Сортировки'], ['Назад⬅️']], resize_keyboard=True))
         return ConversationHandler.states.SETTINGS
     if cq.data == 'sort_by_цене':
         print('by price')
@@ -119,7 +119,7 @@ def callback(update, context):
         i_change_price_or_procent = InlineKeyboardButton(text='по {}'.format(change_sort_type(price_or_procent)), callback_data='price_to_{}'.format(change_sort_type(price_or_procent)))
         i_change_sort = InlineKeyboardButton(text='сортировать по {}'.format(change_sort_type(obj[1])), callback_data='sort_by_{}'.format(change_sort_type(obj[1])))
         
-        cq.edit_message_text('Ваша сортировка по: {} \nпо:   {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_change_price_or_procent],[i_change_sort]]))
+        cq.edit_message_text('Выбрана настройка сортировки по {}, сортироваться будет по {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_change_price_or_procent],[i_change_sort]]))
     if cq.data == 'sort_by_процентам':
         print('by procent')
         c.execute("""UPDATE sort SET sort_by = 'процентам' WHERE id={} """.format(cq.message.chat.id))
@@ -135,4 +135,4 @@ def callback(update, context):
         i_change_price_or_procent = InlineKeyboardButton(text='по {}'.format(change_sort_type(price_or_procent)), callback_data='procent_to_{}'.format(change_sort_type(price_or_procent)))
         i_change_sort = InlineKeyboardButton(text='сортировать по {}'.format(change_sort_type(obj[1])), callback_data='sort_by_{}'.format(change_sort_type(obj[1])))
         
-        cq.edit_message_text('Ваша сортировка по: {} \nпо:   {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_change_price_or_procent],[i_change_sort]]))
+        cq.edit_message_text('Выбрана настройка сортировки по {}, сортироваться будет по {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_change_price_or_procent],[i_change_sort]]))
