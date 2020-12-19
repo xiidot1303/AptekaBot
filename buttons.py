@@ -59,14 +59,15 @@ def about_us(update, context):
     conn.close()
 
 def our_partners(update, context):
-    update.message.reply_text('deqwdfwqe')
     bot = context.bot
     p = os.listdir('our_partners')
+    update.message.reply_text(p)
     for i in p:
         if i[-3::] == 'xls' or i[-4::] == 'xlsx':
             path = i
             break
-    bot.send_message(update.message.chat.id, 'lal')
+    
+    bot.send_message(update.message.chat.id, path)
     f = open('our_partners/'+path, 'rb')
     bot.send_document(update.message.chat.id, f)
 
