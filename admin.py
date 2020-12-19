@@ -7,6 +7,7 @@ from conversationList import EDIT_OUR_SITE, ADD_REMOVE_ADMIN
 from conversationList import CREATE_ADMIN, DELETE_ADMIN
 def superadmin(update, context):
     text = update.message.text
+    bot = context.bot
     if text == 'Обновить Excel':
         mrk = ReplyKeyboardMarkup(keyboard=[['назад']], resize_keyboard=True)
         update.message.reply_text("отправьте новый файл", reply_markup=mrk)
@@ -24,14 +25,15 @@ def superadmin(update, context):
         
         return EDIT_ABOUT_US
     elif text == 'Наши партнеры🤝':
-        conn = sqlite3.connect('data.db')
-        c = conn.cursor()
-        c.execute("SELECT * FROM menus")
+        p = os.listdir('our_partners')
+        for i in p:
+            if i[-3::] == 'xls' or i[-4::] == 'xlsx':
+                path = i
+                break
         i_edit = KeyboardButton(text='Изменить')
         i_cancel = KeyboardButton(text='Назад')
-        update.message.reply_text(c.fetchall()[0][1], reply_markup=ReplyKeyboardMarkup([[i_edit, i_cancel]], resize_keyboard=True, one_time_keyboard=True))
-        conn.commit()
-        conn.close()
+        bot.send_document(update.message.chat.id, 'our_partners/'+path, reply_markup=ReplyKeyboardMarkup([[i_edit, i_cancel]], resize_keyboard=True, one_time_keyboard=True))
+
         return EDIT_OUR_PARTNERS
     elif text == 'Наш сайт':
         conn = sqlite3.connect('data.db')
@@ -99,7 +101,7 @@ def edit_our_partners(update, context):
     if text == 'Изменить':
         
         mrk = ReplyKeyboardRemove(remove_keyboard=True)
-        update.message.reply_text('Отправьте новый текст для меню «наши партнеры» ', reply_markup=mrk)
+        update.message.reply_text('Отправьте новый документ для меню «наши партнеры» ', reply_markup=mrk)
         return UPDATE_OUR_PARTNERS
     elif text == 'Назад':
         
@@ -109,13 +111,16 @@ def edit_our_partners(update, context):
             update.message.reply_text("админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт']], resize_keyboard=True))
         return SUPERADMIN
 def update_our_partners(update, context):    
-    conn = sqlite3.connect('data.db')
-    c = conn.cursor()
+    bot = context.bot
+    p = os.listdir('our_partners')
+    for i in p:
+        if i[-3::] == 'xls' or i[-4::] == 'xlsx':
+            path = i
+            break
+    os.remove('our_partners/'+path)
     
-    c.execute("""UPDATE menus SET our_partners = '{}' """.format(update.message.text))
-
-    conn.commit()
-    conn.close()
+    doc = bot.get_file(update.message.document.file_id)
+    doc.download('our_partners/'+update.message.document.file_name)
     if issuperadmin(update.message.chat.id):
         update.message.reply_text("гл. админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
     else:

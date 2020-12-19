@@ -59,14 +59,13 @@ def about_us(update, context):
     conn.close()
 
 def our_partners(update, message):
-    
-    conn = sqlite3.connect('data.db')
-    c = conn.cursor()
-    c.execute("SELECT * FROM menus")
-    update.message.reply_text(c.fetchall()[0][1])
-    conn.commit()
-    conn.close()
-
+    bot = context.bot
+    p = os.listdir('our_partners')
+        for i in p:
+            if i[-3::] == 'xls' or i[-4::] == 'xlsx':
+                path = i
+                break
+    bot.send_document(update.message.chat.id, 'our_partners/'+path)
 
 def our_site(update, context):
     

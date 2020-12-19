@@ -36,7 +36,7 @@ start_conversation_handler = ConversationHandler(
         EDIT_OUR_PARTNERS: [MessageHandler(Filters.text, edit_our_partners)],
         UPDATE_OUR_PARTNERS: [MessageHandler(Filters.text, update_our_partners)],
         EDIT_OUR_SITE: [MessageHandler(Filters.text, edit_our_site)],
-        UPDATE_OUR_SITE: [MessageHandler(Filters.text, update_our_site)],
+        UPDATE_OUR_SITE: [MessageHandler(Filters.document, update_our_site)],
         CREATE_ADMIN: [MessageHandler(Filters.text, create_admin)],
         ADD_REMOVE_ADMIN: [MessageHandler(Filters.text, add_remove_admin)],
         DELETE_ADMIN: [MessageHandler(Filters.text, delete_admin)],
