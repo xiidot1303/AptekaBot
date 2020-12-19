@@ -239,18 +239,18 @@ def select_drugs(update, context):
             else:
                 d += x
         all = w
-        min = 10000000000000000000000000.0
-        max = 0
+        minn = 10000000000000000000000000.0
+        maxn = 0
 
         for w in all:
             if w[4] == 0:
                 w[4] = 'ожидаемый'
-            if max < w[4]:
-                max = w[4]
-            if min > w[4]:
-                min = w[4]
+            if maxn < w[4]:
+                maxn = w[4]
+            if minn > w[4]:
+                minn = w[4]
             results += '\nНазвания: ' + w[0] + '\nПроизводитель: ' + w[9] + '({})'.format(w[10]) + '\nАдрес:' + find_address(w[8]) + '\nЦена сум: ' + str(w[4]) + '\nЦена в долларах США: ' + str(w[5]) + '\nЦена в ЕВРО: ' + str(w[6]) + '\nТелефон: '+ find_phone(w[8]) + '\n\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n\n'
-        min_and_max = '↗️ Максимальная цена: {} сум.\n↘️ Минимальная цена:  {}} сум.'.format(str(max), str(min))
+        min_and_max = '↗️ Максимальная цена: {} сум.\n↘️ Минимальная цена:  {} сум.'.format(str(maxn), str(minn))
 
         results = 'Дата загрузки прайса: ' + d + '\n' + results
         bot.send_message(update.message.chat.id, results)
