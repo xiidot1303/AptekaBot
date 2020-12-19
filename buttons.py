@@ -59,6 +59,7 @@ def about_us(update, context):
     conn.close()
 
 def our_partners(update, context):
+    update.message.reply_text('deqwdfwqe')
     bot = context.bot
     p = os.listdir('our_partners')
     for i in p:
