@@ -67,7 +67,7 @@ def our_partners(update, context):
             path = i
             break
     
-    bot.send_message(update.message.chat.id, path)
+    
     f = open('our_partners/'+path, 'rb')
     bot.send_document(update.message.chat.id, f)
 
