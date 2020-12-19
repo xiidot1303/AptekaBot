@@ -65,6 +65,7 @@ def our_partners(update, context):
         if i[-3::] == 'xls' or i[-4::] == 'xlsx':
             path = i
             break
+    bot.send_message(update.message.chat.id, 'lal')
     f = open('our_partners/'+path, 'rb')
     bot.send_document(update.message.chat.id, f)
 
