@@ -61,10 +61,10 @@ def about_us(update, context):
 def our_partners(update, message):
     bot = context.bot
     p = os.listdir('our_partners')
-        for i in p:
-            if i[-3::] == 'xls' or i[-4::] == 'xlsx':
-                path = i
-                break
+    for i in p:
+        if i[-3::] == 'xls' or i[-4::] == 'xlsx':
+            path = i
+            break
     bot.send_document(update.message.chat.id, 'our_partners/'+path)
 
 def our_site(update, context):
