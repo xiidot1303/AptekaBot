@@ -27,6 +27,7 @@ def superadmin(update, context):
         return EDIT_ABOUT_US
     elif text == 'Наши партнеры🤝':
         p = os.listdir('our_partners')
+        update.message.reply_text('hi')
         for i in p:
             if i[-3::] == 'xls' or i[-4::] == 'xlsx':
                 path = i
