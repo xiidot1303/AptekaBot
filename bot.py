@@ -51,8 +51,6 @@ def start(update, context):
             update.message.reply_text('Напишите свое имя')
             return WRITE_NAME
 
-    conn.commit()
-    conn.close()   
 
 #registr
 def write_name(update, context):
