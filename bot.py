@@ -351,6 +351,9 @@ def update_excel(update, context):
         return SUPERADMIN
 
 def cancel(update, context):
-    print('done')
-
+    bot = context.bot
+    c = update.callback_query 
+    if update.callback_query.data == 'next':
+        c.edit_message_text('Нажмите /start для перезапустить бот')
+        return ConversationHandler.END
 

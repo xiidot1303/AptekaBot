@@ -22,7 +22,7 @@ create_conversation_handler = ConversationHandler(
         SELECT_DRUGS: [MessageHandler(Filters.text, select_drugs)],
         
     },
-    fallbacks = [CommandHandler('cancel', cancel)]
+    fallbacks = [CallbackQueryHandler(cancel)]
 )
 start_conversation_handler = ConversationHandler(
     entry_points = [CommandHandler('start', start)],
@@ -32,7 +32,7 @@ start_conversation_handler = ConversationHandler(
         UPDATE_EXCEL: [MessageHandler(Filters.all, update_excel)],
         EDIT_ABOUT_US: [MessageHandler(Filters.text, edit_about_us)],
         UPDATE_ABOUT_US: [MessageHandler(Filters.text, update_about_us)],
-        START: [CommandHandler('start', start)],
+        
         EDIT_OUR_PARTNERS: [MessageHandler(Filters.text, edit_our_partners)],
         UPDATE_OUR_PARTNERS: [MessageHandler(Filters.document, update_our_partners)],
         EDIT_OUR_SITE: [MessageHandler(Filters.text, edit_our_site)],
@@ -43,7 +43,7 @@ start_conversation_handler = ConversationHandler(
         WRITE_NAME: [MessageHandler(Filters.text, write_name)],
         SEND_PHONE: [MessageHandler(Filters.all, send_phone)],
     },
-    fallbacks = [CommandHandler('cancel', cancel)]
+    fallbacks = [CallbackQueryHandler(cancel)]
 )
 setting_conversation_handler = ConversationHandler(
     entry_points = [MessageHandler(Filters.text(['Настройки⚙️', 'Вернуться к настройкам']), settings)],
@@ -52,7 +52,7 @@ setting_conversation_handler = ConversationHandler(
         UPDATE_NAME: [MessageHandler(Filters.text, update_name)],
         UPDATE_PHONE: [MessageHandler(Filters.text, update_phone)],
     },
-    fallbacks = [CommandHandler('cancel', cancel)]
+    fallbacks = [CallbackQueryHandler(cancel)]
 )
 
 dp.add_handler(setting_conversation_handler)
