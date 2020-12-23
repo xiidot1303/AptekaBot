@@ -67,7 +67,10 @@ def write_name(update, context):
 def send_phone(update, context):
     conn = sqlite3.connect('data.db')
     c = conn.cursor()
-    c.execute("""UPDATE users SET phone_number = '{}' WHERE id={} """.format(str(update.message.contact.phone_number), update.message.chat.id))
+    if update.message.contact == None or not update.message.contact:
+        c.execute("""UPDATE users SET phone_number = '{}' WHERE id={} """.format(str(update.message.text), update.message.chat.id))
+    else:
+        c.execute("""UPDATE users SET phone_number = '{}' WHERE id={} """.format(str(update.message.contact.phone_number), update.message.chat.id))
 
     conn.commit()
     conn.close()

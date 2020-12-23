@@ -41,7 +41,7 @@ start_conversation_handler = ConversationHandler(
         ADD_REMOVE_ADMIN: [MessageHandler(Filters.text, add_remove_admin)],
         DELETE_ADMIN: [MessageHandler(Filters.text, delete_admin)],
         WRITE_NAME: [MessageHandler(Filters.text, write_name)],
-        SEND_PHONE: [MessageHandler(Filters.contact, send_phone)],
+        SEND_PHONE: [MessageHandler(Filters.all, send_phone)],
     },
     fallbacks = [CommandHandler('cancel', cancel)]
 )
