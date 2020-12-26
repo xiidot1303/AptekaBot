@@ -93,40 +93,22 @@ def global_name(update, context):
                 break
         
         name = update.message.text
-        workbook = xlrd.open_workbook('{}'.format(path))
-        worksheet = workbook.sheet_by_index(0)
-        c = 0
-        r = []
-        for i in worksheet.col_values(0):
-            if name.lower() in i.lower():
-                bot.send_chat_action(chat_id=update.message.chat.id, action=ChatAction.TYPING)
-                r.append(c)
-            c += 1
-        c = 0
-        if not r:
-            for i in worksheet.col_values(1):
-                
-                
-                try:
-                    if name.lower() == i.lower():
-                        bot.send_chat_action(chat_id=update.message.chat.id, action=ChatAction.TYPING)
-
-                        r.append(c)
-                except:
-                    wefwefw = 9
-                c += 1
-        items = []
-        texts = []
-        if not r:
+        df = pd.read_excel('{}'.format(path), sheet_name=0)
+        
+        df1 = df[(df[df.columns[1]].str.contains(name, na=False))]
+        if df1.empty:
+            df1 = df[(df[df.columns[0]].str.contains(name, na=False))]
+    
+        l = df1[df1.columns[0]]
+        for i in l:
+            if not i in texts:
+                texts.append(i)
+                items.append([KeyboardButton(text=i)])
+        if not items:
             mrk = [[KeyboardButton(text='Назад')]]
             update.message.reply_text('Ничего не найдено, попробуйте еще раз', reply_markup=ReplyKeyboardMarkup(mrk, resize_keyboard=True, one_time_keyboard=True))
             return GLOBAL_NAME
         else:
-            for i in r:
-                w = worksheet.row_values(i)
-                if not w[0] in texts:
-                    texts.append(w[0])
-                    items.append([KeyboardButton(text=w[0])])
             items.append([KeyboardButton(text='Назад'), KeyboardButton(text='Главная')])
             update.message.reply_text('Пожалуйста, выберите лекарство из предоставленного списка.', reply_markup=ReplyKeyboardMarkup(items, resize_keyboard=True, one_time_keyboard=True))
             conn = sqlite3.connect('data.db')
@@ -197,22 +179,13 @@ def select_drugs(update, context):
             if i[-3::] == 'xls' or i[-4::] == 'xlsx':
                 path = i
                 break
-        workbook = xlrd.open_workbook('{}'.format(path))
-
-        worksheet = workbook.sheet_by_index(0)
-
-        c = 0
-        r = []
-        for i in worksheet.col_values(0):
-            if i == name:
-                r.append(c)
-            c += 1
-
-        results = ""
         w = []
-        for i in r:
-            col = worksheet.row_values(i)
-            w.append(col)
+        df = pd.read_excel('{}'.format(path), sheet_name=0)
+        df1 = df[(df[df.columns[0]] == name)]
+        
+        for i in range(0, df1.shape[0]):
+            values = df1.iloc[i].values.tolist()
+            w.append(values)
         conn = sqlite3.connect('data.db')
         c = conn.cursor()
         c.execute("SELECT * FROM sort WHERE id = {} ".format(update.message.chat.id))
@@ -229,7 +202,7 @@ def select_drugs(update, context):
                 w = sort_percent_grow(w)
             elif obj[3] == 'убывание':
                 w = sort_percent_wane(w)
-        print(w)
+        
         c.execute("SELECT * FROM date ")
         f = c.fetchone()[0]
         
@@ -260,52 +233,38 @@ def select_drugs(update, context):
     
 
 def find_address(title):
-
     p = os.listdir()
     for i in p:
         if i[-3::] == 'xls' or i[-4::] == 'xlsx':
             path = i
             break
-    workbook = xlrd.open_workbook('{}'.format(path))
+    df = pd.read_excel('{}'.format(path), sheet_name=1)
 
-    worksheet = workbook.sheet_by_index(1)
+    df1 = df[(df[df.columns[1]].str.lower().str.contains(title.lower(), na = False))]
 
-    c = 0
-    r = []
-    for i in worksheet.col_values(1):
-        
-        if i[0:len(title)].lower() == title.lower():
-            w = worksheet.row_values(c)
-                 
-            return w[3]
-            break
-        c += 1
+    r = df1[df1.columns[3]].values
+    if r:
+        return str(r[0])
     else:
-        return 'Не указан'
+        return ''
 
+        
 def find_phone(title):
-    print('find_phone')
+  
     p = os.listdir()
     for i in p:
         if i[-3::] == 'xls' or i[-4::] == 'xlsx':
             path = i
             break
-    workbook = xlrd.open_workbook('{}'.format(path))
-
-    worksheet = workbook.sheet_by_index(1)
-
-    c = 0
-    r = []
-    for i in worksheet.col_values(1):
-        
-        if i[0:len(title)].lower() == title.lower():
-            w = worksheet.row_values(c)
-            
-            return w[2]
-            break
-        c += 1
+    df = pd.read_excel('{}'.format(path), sheet_name=1)
+    
+    df1 = df[(df[df.columns[1]].str.lower().str.contains(title.lower(), na = False))]
+    
+    r = df1[df1.columns[2]].values
+    if r:
+        return str(r[0])
     else:
-        return 'Не указан'
+        return ''
 
 
 
