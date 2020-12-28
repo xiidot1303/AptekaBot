@@ -98,7 +98,8 @@ def global_name(update, context):
         df1 = df[(df[df.columns[1]].str.contains(name, na=False))]
         if df1.empty:
             df1 = df[(df[df.columns[0]].str.contains(name, na=False))]
-    
+        items = []
+        texts = []
         l = df1[df1.columns[0]]
         for i in l:
             if not i in texts:
