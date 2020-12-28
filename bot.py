@@ -244,10 +244,10 @@ def find_address(title):
     df1 = df[(df[df.columns[1]].str.lower().str.contains(title.lower(), na = False))]
 
     r = df1[df1.columns[3]].values
-    if r:
+    if not r.empty:
         return str(r[0])
     else:
-        return ''
+        return 'Не указан'
 
 
 def find_phone(title):
@@ -262,10 +262,10 @@ def find_phone(title):
     df1 = df[(df[df.columns[1]].str.lower().str.contains(title.lower(), na = False))]
     
     r = df1[df1.columns[2]].values
-    if r:
+    if not r.empty:
         return str(r[0])
     else:
-        return ''
+        return 'Не указан'
 
 
 
