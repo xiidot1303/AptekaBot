@@ -216,7 +216,7 @@ def select_drugs(update, context):
         all = w
         minn = 10000000000000000000000000.0
         maxn = 0
-
+        results = ''
         for w in all:
             if w[4] == 0:
                 w[4] = 'ожидаемый'
