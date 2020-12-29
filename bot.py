@@ -112,7 +112,7 @@ def global_name(update, context):
             name = name.replace('у', '(ю|у)')
         if 'с' in name:
             name = name.replace('с', '(ц|с)')
-        df1 = df[(df[df.columns[0]].str.lower().str.contains(r'[-, ]?{}( )'.format(name.lower()), na=False, regex=True))]
+        df1 = df[(df[df.columns[0]].str.lower().str.contains(r'^(?!a-z){}( )|([-, ,\W,:space:]){}( )'.format(name.lower(), name.lower()), na=False, regex=True))]
         if df1.empty:
             df1 = df[(df[df.columns[1]].str.lower().str.contains(r'{}'.format(name.lower()), na=False, regex=True))]
         items = []
