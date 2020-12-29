@@ -94,10 +94,27 @@ def global_name(update, context):
         
         name = update.message.text
         df = pd.read_excel('{}'.format(path), sheet_name=0)
-        
-        df1 = df[(df[df.columns[1]].str.contains(name, na=False))]
+        if 'е' in name:
+            name = name.replace('е', '(е|ё)')
+        if 'ы' in name:
+            name = name.replace('ы', '(ы|и)')
+        if 'а' in name:
+            name = name.replace('а', '(а|о)')
+        if 'о' in name:
+            name = name.replace('о', '(а|о)')
+            if 'а|(а|о)' in name:
+                name = name.replace('а|(а|о)', 'а|о')
+        if 'и' in name:
+            name = name.replace('и', '(и|ы)')
+            if 'ы|(и|ы)' in name:
+                name = name.replace('ы|(и|ы)', 'ы|и')
+        if 'у' in name:
+            name = name.replace('у', '(ю|у)')
+        if 'с' in name:
+            name = name.replace('с', '(ц|с)')
+        df1 = df[(df[df.columns[0]].str.lower().str.contains(r'[-, ]?{}( )'.format(name.lower()), na=False, regex=True))]
         if df1.empty:
-            df1 = df[(df[df.columns[0]].str.contains(name, na=False))]
+            df1 = df[(df[df.columns[1]].str.lower().str.contains(r'{}'.format(name.lower()), na=False, regex=True))]
         items = []
         texts = []
         l = df1[df1.columns[0]]
