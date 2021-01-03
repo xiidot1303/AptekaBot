@@ -135,6 +135,13 @@ def global_name(update, context):
             n = c.fetchone()[2]
             c.execute("""UPDATE access_to_find SET chance = {} WHERE id={} """.format(int(n)-1, update.message.chat.id))
             conn.commit()
+            for i in df1.values.tolist():
+                if i[4] == 'догов.':
+                    i[4] = 1
+                elif i[4] == 'ожидаемый':
+                    i[4] = 0
+                c.execute("INSERT INTO list_after_search VALUES ({}, '{}', '{}','{}','{}',{},'{}','{}','{}','{}','{}','{}') ".format(update.message.chat.id,*i))
+            conn.commit()            
             conn.close()
             return SELECT_DRUGS
     
@@ -143,11 +150,23 @@ def select_drugs(update, context):
     bot = context.bot
     name = update.message.text
     if name == 'Главная':
+        conn = sqlite3.connect('data.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM list_after_search WHERE id={}".format(update.message.chat.id))
+        for i in c.fetchall():
+            c.execute("DELETE FROM list_after_search WHERE id={} ".format(update.message.chat.id))
+        conn.commit()
+        conn.close()
         update.message.reply_text("Главное меню", reply_markup=ReplyKeyboardMarkup(keyboard=[['Поиск лекарств🔎'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Настройки⚙️']], resize_keyboard=True))
         return ConversationHandler.END
     if name == 'Назад':
         conn = sqlite3.connect('data.db')
         c = conn.cursor()
+        c.execute("SELECT * FROM list_after_search WHERE id={}".format(update.message.chat.id))
+        for i in c.fetchall():
+            c.execute("DELETE FROM list_after_search WHERE id={} ".format(update.message.chat.id))
+        conn.commit()
+
         c.execute("SELECT * FROM access_to_find WHERE id={} ".format(update.message.chat.id))
         f = update.message.date
         fetchone = c.fetchone()
@@ -197,15 +216,11 @@ def select_drugs(update, context):
             if i[-3::] == 'xls' or i[-4::] == 'xlsx':
                 path = i
                 break
-        w = []
-        df = pd.read_excel('{}'.format(path), sheet_name=0)
-        df1 = df[(df[df.columns[0]] == name)]
-        
-        for i in range(0, df1.shape[0]):
-            values = df1.iloc[i].values.tolist()
-            w.append(values)
+            
         conn = sqlite3.connect('data.db')
         c = conn.cursor()
+        c.execute("SELECT zero, one, two, three, four, five, six, seven, eight, nine, ten FROM list_after_search WHERE zero='{}' ".format(name))
+        w = c.fetchall()
         c.execute("SELECT * FROM sort WHERE id = {} ".format(update.message.chat.id))
         obj = c.fetchone()
         if obj[1] == 'цене':
@@ -235,53 +250,51 @@ def select_drugs(update, context):
         maxn = 0
         results = ''
         for w in all:
-            if w[4] == 0:
+            w4 = w[4]
+            if int(w4) == 0:
                 w[4] = 'ожидаемый'
+            elif int(w4) == 1:
+                w4 = 'догов.'
             if maxn < w[4]:
                 maxn = w[4]
             if minn > w[4]:
                 minn = w[4]
-            results += '\nНазвания: ' + w[0] + '\nПроизводитель: ' + w[9] + '({})'.format(w[10]) + '\nАдрес:' + find_address(w[8]) + '\nЦена сум: ' + str(w[4]) + '\nЦена в долларах США: ' + str(w[5]) + '\nЦена в ЕВРО: ' + str(w[6]) + '\nТелефон: '+ find_phone(w[8]) + '\n\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n\n'
+            results += '\nНазвания: ' + w[0] + '\nПроизводитель: ' + w[9] + '({})'.format(w[10]) + '\nАдрес:' + find_address(w[8]) + '\nЦена сум: ' + str(w4) + '\nЦена в долларах США: ' + str(w[5]) + '\nЦена в ЕВРО: ' + str(w[6]) + '\nТелефон: '+ find_phone(w[8]) + '\n\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n\n'
         min_and_max = '↗️ Максимальная цена: {} сум.\n↘️ Минимальная цена:  {} сум.'.format(str(maxn), str(minn))
 
         results = 'Дата загрузки прайса: ' + d + '\n' + results
         bot.send_message(update.message.chat.id, results)
         bot.send_message(update.message.chat.id, min_and_max)
+        conn.close()
         return SELECT_DRUGS        
     
 
 def find_address(title):
-    p = os.listdir()
-    for i in p:
-        if i[-3::] == 'xls' or i[-4::] == 'xlsx':
-            path = i
-            break
-    df = pd.read_excel('{}'.format(path), sheet_name=1)
-
-    df1 = df[(df[df.columns[1]].str.lower().str.contains(title.lower(), na = False))]
-
-    r = df1[df1.columns[3]].values.tolist()
-    if r:
-        return str(r[0])
-    else:
+    try:
+        conn = sqlite3.connect("data.db")
+        c = conn.cursor()
+        c.execute("SELECT * FROM address_and_phone WHERE name LIKE '%{}%' ".format(title.lower()))
+        r = c.fetchone()[2]
+        if r:
+            return r
+        else:
+            return 'Не указан' 
+        conn.close()
+    except:
         return 'Не указан'
 
-
 def find_phone(title):
-  
-    p = os.listdir()
-    for i in p:
-        if i[-3::] == 'xls' or i[-4::] == 'xlsx':
-            path = i
-            break
-    df = pd.read_excel('{}'.format(path), sheet_name=1)
-    
-    df1 = df[(df[df.columns[1]].str.lower().str.contains(title.lower(), na = False))]
-    
-    r = df1[df1.columns[2]].values.tolist()
-    if r:
-        return str(r[0])
-    else:
+    try:
+        conn = sqlite3.connect("data.db")
+        c = conn.cursor()
+        c.execute("SELECT * FROM address_and_phone WHERE name LIKE '%{}%' ".format(title.lower()))
+        r = c.fetchone()[1]
+        if r:
+            return r
+        else:
+            return 'Не указан' 
+        conn.close()
+    except:
         return 'Не указан'
 
 
@@ -307,6 +320,8 @@ def update_excel(update, context):
             update.message.reply_text("админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт']], resize_keyboard=True))
         return SUPERADMIN    
     else:
+        bot = context.bot
+        bot.send_chat_action(chat_id=update.message.chat.id, action=ChatAction.TYPING)
         p = os.listdir()
         for i in p:
             if i[-3::] == 'xls' or i[-4::] == 'xlsx':
@@ -317,10 +332,32 @@ def update_excel(update, context):
         c = conn.cursor()
         c.execute("""UPDATE date SET datetime = '{}' """.format(str(update.message.date)))
         conn.commit()
-        conn.close()
         bot = context.bot
         doc = bot.get_file(update.message.document.file_id)
         doc.download(update.message.document.file_name)
+
+        p = os.listdir()
+        for i in p:
+            if i[-3::] == 'xls' or i[-4::] == 'xlsx':
+                path = i
+                break
+        c.execute("SELECT * FROM address_and_phone ")
+        for i in c.fetchall():
+            c.execute("DELETE FROM address_and_phone ")
+        conn.commit()
+        df = pd.read_excel('{}'.format(path), sheet_name=1)
+        for i in df.values.tolist():
+        
+            try:
+
+                c.execute("INSERT INTO address_and_phone VALUES ('{}','{}','{}') ".format(i[1].lower(), i[2], i[3]))
+
+            except:
+                fnwow = 0
+        conn.commit()
+        conn.close()
+
+
         if issuperadmin(update.message.chat.id):
             update.message.reply_text("главный админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
         else:
