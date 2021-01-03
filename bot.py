@@ -38,6 +38,14 @@ def start(update, context):
     else:
         conn = sqlite3.connect('data.db')
         c = conn.cursor()
+        c.execute("SELECT * FROM sort WHERE id = {} ".format(update.message.chat.id))
+        obj = c.fetchall()
+        if not obj:
+            c.execute("INSERT INTO sort VALUES ({}, 'цене', 'возрастание', 'возрастание')".format(update.message.chat.id))
+            conn.commit()
+            
+
+
         c.execute("SELECT * FROM users WHERE id={}".format(update.message.chat.id))
         user = c.fetchone()
         if user:
@@ -222,6 +230,7 @@ def select_drugs(update, context):
         c.execute("SELECT zero, one, two, three, four, five, six, seven, eight, nine, ten FROM list_after_search WHERE zero='{}' ".format(name))
         w = c.fetchall()
         c.execute("SELECT * FROM sort WHERE id = {} ".format(update.message.chat.id))
+
         obj = c.fetchone()
         if obj[1] == 'цене':
             
