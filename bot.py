@@ -252,7 +252,7 @@ def select_drugs(update, context):
         for w in all:
             w4 = w[4]
             if int(w4) == 0:
-                w[4] = 'ожидаемый'
+                w4 = 'ожидаемый'
             elif int(w4) == 1:
                 w4 = 'догов.'
             if maxn < w[4]:
