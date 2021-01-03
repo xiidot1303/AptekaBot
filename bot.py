@@ -43,7 +43,7 @@ def start(update, context):
         if not obj:
             c.execute("INSERT INTO sort VALUES ({}, 'цене', 'возрастание', 'возрастание')".format(update.message.chat.id))
             conn.commit()
-            
+
 
 
         c.execute("SELECT * FROM users WHERE id={}".format(update.message.chat.id))
@@ -229,6 +229,9 @@ def select_drugs(update, context):
         c = conn.cursor()
         c.execute("SELECT zero, one, two, three, four, five, six, seven, eight, nine, ten FROM list_after_search WHERE zero='{}' ".format(name))
         w = c.fetchall()
+        if not w:
+            bot.send_message(update.message.chat.id, 'Ошибка! Выберите элемент, показанный в списке')
+            return SELECT_DRUGS
         c.execute("SELECT * FROM sort WHERE id = {} ".format(update.message.chat.id))
 
         obj = c.fetchone()
