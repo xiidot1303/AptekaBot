@@ -100,7 +100,7 @@ def global_name(update, context):
                 path = i
                 break
         
-        name = update.message.text
+        name = update.message.text.lower()
         df = pd.read_excel('{}'.format(path), sheet_name=0)
         if 'е' in name:
             name = name.replace('е', '(е|ё)')
@@ -120,6 +120,8 @@ def global_name(update, context):
             name = name.replace('у', '(ю|у)')
         if 'с' in name:
             name = name.replace('с', '(ц|с)')
+        if 'ш' in name:
+            name = name.replace('ш', '(-)?(щ|ш)(-)?')
         df1 = df[(df[df.columns[0]].str.lower().str.contains(r'^(?!a-z){}( )|([-, ,\W,:space:]){}( )'.format(name.lower(), name.lower()), na=False, regex=True))]
         if df1.empty:
             df1 = df[(df[df.columns[1]].str.lower().str.contains(r'{}'.format(name.lower()), na=False, regex=True))]
