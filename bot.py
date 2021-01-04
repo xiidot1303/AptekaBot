@@ -120,8 +120,10 @@ def global_name(update, context):
             name = name.replace('у', '(ю|у)')
         if 'с' in name:
             name = name.replace('с', '(ц|с)')
-        if 'ш-' in name:
-            name = name.replace('ш-', 'ш')
+        if '-' in name:
+            name = name.replace('-', '(-)?')
+        if ' ' in name:
+            name = name.replace(' ', '( )?')
         if 'ш' in name:
             name = name.replace('ш', '(-)?(щ|ш)(-)?')
         if 'д' in name:
