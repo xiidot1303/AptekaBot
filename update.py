@@ -18,11 +18,11 @@ create_conversation_handler = ConversationHandler(
     entry_points = [MessageHandler(Filters.text('Поиск лекарств🔎'), find_drug)],
     states = {
         # GET_BILL_DETAILS: [MessageHandler(Filters.text,get_bill_details)],
-        GLOBAL_NAME: [MessageHandler(Filters.text, global_name)],
-        SELECT_DRUGS: [MessageHandler(Filters.text, select_drugs)],
+        GLOBAL_NAME: [MessageHandler(Filters.all, global_name)],
+        SELECT_DRUGS: [MessageHandler(Filters.all, select_drugs)],
         
     },
-    fallbacks = [CallbackQueryHandler(cancel)]
+    fallbacks = []
 )
 start_conversation_handler = ConversationHandler(
     entry_points = [CommandHandler('start', start)],
@@ -52,7 +52,7 @@ setting_conversation_handler = ConversationHandler(
         UPDATE_NAME: [MessageHandler(Filters.text, update_name)],
         UPDATE_PHONE: [MessageHandler(Filters.text, update_phone)],
     },
-    fallbacks = [CallbackQueryHandler(cancel)]
+    fallbacks = []
 )
 
 dp.add_handler(setting_conversation_handler)
