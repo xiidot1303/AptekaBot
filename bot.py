@@ -102,6 +102,7 @@ def global_name(update, context):
         
         name = update.message.text.lower()
         df = pd.read_excel('{}'.format(path), sheet_name=0)
+        
         if 'е' in name:
             name = name.replace('е', '(е|ё)')
         if 'ы' in name:
@@ -123,13 +124,18 @@ def global_name(update, context):
         if '-' in name:
             name = name.replace('-', '(-)?')
         if ' ' in name:
-            name = name.replace(' ', '( )?')
+            name = name.replace(' ', '[-, ]?')
         if 'ш' in name:
             name = name.replace('ш', '(-)?(щ|ш)(-)?')
         if 'д' in name:
             name = name.replace('д', 'д(-)?')
         if 'н' in name:
             name = name.replace('н', 'н(-)?')
+        if '1' in name or '2' in name or '3' in name or '4' in name or '5' in name or '6' in name or '7' in name or '8' in name or '9' in name:
+            numbers = '123456789'
+            for n in name:
+                if n in numbers:
+                    name = name.replace(n, '[-, ]?{}[-, ]?'.format(n))
         df1 = df[(df[df.columns[0]].str.lower().str.contains(r'^(?!a-z){}( )|([-, ,\W,:space:]){}( )'.format(name.lower(), name.lower()), na=False, regex=True))]
         if df1.empty:
             df1 = df[(df[df.columns[1]].str.lower().str.contains(r'{}'.format(name.lower()), na=False, regex=True))]
