@@ -300,7 +300,7 @@ def select_drugs(update, context):
         min_and_max = '↗️ Максимальная цена: {} сум.\n↘️ Минимальная цена:  {} сум.'.format(str(maxn), str(minn))
         if n != 0:
             results = 'Дата загрузки прайса: ' + d + '\n' + results
-        bot.send_message(update.message.chat.id, results)
+            bot.send_message(update.message.chat.id, results)
         bot.send_message(update.message.chat.id, min_and_max)
         conn.close()
         return SELECT_DRUGS        
