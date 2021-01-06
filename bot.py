@@ -208,7 +208,7 @@ def select_drugs(update, context):
 
         if not fetchone:
 
-            c.execute("INSERT INTO access_to_find VALUES ({}, '{}', 5)".format(update.message.chat.id, d))
+            c.execute("INSERT INTO access_to_find VALUES ({}, '{}', 500)".format(update.message.chat.id, d))
             conn.commit()
             update.message.reply_text('Введите название лекарства, а наш бот подскажет Вам возможные варианты:\n\nПример: анальгин\n(Минимум 3 символа)', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
             conn.close()
@@ -232,7 +232,7 @@ def select_drugs(update, context):
                     return GLOBAL_NAME
             else:
                 c.execute("""UPDATE access_to_find SET last_date = '{}' WHERE id={} """.format(current_day, update.message.chat.id))
-                c.execute("""UPDATE access_to_find SET chance = 5 WHERE id={} """.format(update.message.chat.id))
+                c.execute("""UPDATE access_to_find SET chance = 500 WHERE id={} """.format(update.message.chat.id))
                 conn.commit()
                 update.message.reply_text('Введите название лекарства, а наш бот подскажет Вам возможные варианты:\n\nПример: анальгин\n(Минимум 3 символа)', reply_markup = ReplyKeyboardMarkup(keyboard=[['Назад']], resize_keyboard=True))
                 conn.close()
