@@ -139,7 +139,7 @@ def global_name(update, context):
         df1 = df[(df[df.columns[0]].str.lower().str.contains(r'^(?!a-z){}( )|([-, ,\W,:space:]){}( )'.format(name.lower(), name.lower()), na=False, regex=True))]
         if df1.empty:
             df1 = df[(df[df.columns[1]].str.lower().str.contains(r'{}'.format(name.lower()), na=False, regex=True))]
-        items = []
+        items = [[KeyboardButton(text='Назад'), KeyboardButton(text='Главная')]]
         texts = []
         l = df1[df1.columns[0]]
         for i in l:
@@ -153,7 +153,7 @@ def global_name(update, context):
             update.message.reply_text('Ничего не найдено, попробуйте еще раз', reply_markup=ReplyKeyboardMarkup(mrk, resize_keyboard=True, one_time_keyboard=True))
             return GLOBAL_NAME
         else:
-            items.append([KeyboardButton(text='Назад'), KeyboardButton(text='Главная')])
+        
             update.message.reply_text('Пожалуйста, выберите лекарство из предоставленного списка.', reply_markup=ReplyKeyboardMarkup(items, resize_keyboard=True, one_time_keyboard=True))
             conn = sqlite3.connect('data.db')
             c = conn.cursor()
