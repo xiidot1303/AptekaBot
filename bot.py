@@ -294,7 +294,7 @@ def select_drugs(update, context):
             if minn > w[4]:
                 minn = w[4]
 
-            results += '\nНазвания: ' + w[0] + '\nПроизводитель: ' + w[9] + '({})'.format(w[10]) + '\nАдрес:' + find_address(w[8]) + '\nЦена сум: ' + str(w4) + '\nЦена в долларах США: ' + str(w[5]) + '\nЦена в ЕВРО: ' + str(w[6]) + '\nТелефон: '+ find_phone(w[8]) + '\n\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n\n'
+            results += '\nНазвания: ' + w[0] + '\nПроизводитель: ' + w[9] + '({})'.format(w[10]) + '\nАдрес:' + find_address(w[8]) + '\nЦена сум: ' + str(w4) + '\nТелефон: '+ find_phone(w[8]) + '\n\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n\n'
 
             n += 1
             if n == 6:
