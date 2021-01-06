@@ -145,6 +145,8 @@ def global_name(update, context):
         for i in l:
             if not i in texts:
                 texts.append(i)
+                if '`' in i:
+                    i = i.replace('`', ' ')
                 items.append([KeyboardButton(text=i)])
         if not items:
             mrk = [[KeyboardButton(text='Назад')]]
@@ -164,6 +166,9 @@ def global_name(update, context):
                     i[4] = 1
                 elif i[4] == 'ожидаемый':
                     i[4] = 0
+                if '`' in i[0]:
+                    i[0] = i[0].replace('`', ' ')
+
                 c.execute("INSERT INTO list_after_search VALUES ({}, '{}', '{}','{}','{}',{},'{}','{}','{}','{}','{}','{}') ".format(update.message.chat.id,*i))
             conn.commit()            
             conn.close()
