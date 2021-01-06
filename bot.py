@@ -277,6 +277,7 @@ def select_drugs(update, context):
         minn = 10000000000000000000000000.0
         maxn = 0
         results = ''
+        n = 0
         for w in all:
             w4 = w[4]
             if int(w4) == 0:
@@ -287,7 +288,15 @@ def select_drugs(update, context):
                 maxn = w[4]
             if minn > w[4]:
                 minn = w[4]
+
             results += '\nНазвания: ' + w[0] + '\nПроизводитель: ' + w[9] + '({})'.format(w[10]) + '\nАдрес:' + find_address(w[8]) + '\nЦена сум: ' + str(w4) + '\nЦена в долларах США: ' + str(w[5]) + '\nЦена в ЕВРО: ' + str(w[6]) + '\nТелефон: '+ find_phone(w[8]) + '\n\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n\n'
+
+            n += 1
+            if n == 6:
+                results = 'Дата загрузки прайса: ' + d + '\n' + results
+                bot.send_message(update.message.chat.id, results)
+                results = ''
+                n = 0
         min_and_max = '↗️ Максимальная цена: {} сум.\n↘️ Минимальная цена:  {} сум.'.format(str(maxn), str(minn))
 
         results = 'Дата загрузки прайса: ' + d + '\n' + results
