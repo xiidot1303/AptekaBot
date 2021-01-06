@@ -15,7 +15,7 @@ def issuperadmin(id):
         return True
     else:
         return False
-superadmin = 206261493
+superadmin = os.getenv("SUPERADMIN")
 def start(update, context):
     
     admins = []
