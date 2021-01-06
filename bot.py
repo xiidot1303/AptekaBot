@@ -15,7 +15,7 @@ def issuperadmin(id):
         return True
     else:
         return False
-superadmin = os.getenv("SUPERADMIN")
+superadmin = 206261493
 def start(update, context):
     
     admins = []
@@ -154,7 +154,7 @@ def global_name(update, context):
             return GLOBAL_NAME
         else:
         
-            update.message.reply_text('Пожалуйста, выберите лекарство из предоставленного списка.', reply_markup=ReplyKeyboardMarkup(items, resize_keyboard=True, one_time_keyboard=True))
+            update.message.reply_text('Пожалуйста, выберите лекарство из предоставленного списка.', reply_markup=ReplyKeyboardMarkup(items, resize_keyboard=True))
             conn = sqlite3.connect('data.db')
             c = conn.cursor()
             c.execute("SELECT * FROM access_to_find WHERE id={} ".format(update.message.chat.id))
