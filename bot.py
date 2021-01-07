@@ -6,6 +6,7 @@ from conversationList import GLOBAL_NAME, SELECT_DRUGS, SUPERADMIN, UPDATE_EXCEL
 import sqlite3
 from functions import sort_percent_grow, sort_price_grow, sort_price_wane, sort_percent_wane
 import pandas as pd
+from venv import superadmin
 def forward(update, context):
     print(update.message.forward_from)
 
@@ -15,7 +16,7 @@ def issuperadmin(id):
         return True
     else:
         return False
-superadmin = 206261493
+
 def start(update, context):
     
     admins = []
@@ -294,7 +295,7 @@ def select_drugs(update, context):
             if minn > w[4]:
                 minn = w[4]
 
-            results += '\nНазвания: ' + w[0] + '\nПроизводитель: ' + w[9] + '({})'.format(w[10]) + '\nАдрес:' + find_address(w[8]) + '\nЦена сум: ' + str(w4) + '\nТелефон: '+ find_phone(w[8]) + '\n\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n\n'
+            results += '\nДистрибьютор: ' + w[8] + '\nНазвания: ' + w[0] + '\nПроизводитель: ' + w[9] + '({})'.format(w[10]) + '\nАдрес:' + find_address(w[8]) + '\nЦена сум: ' + str(w4) + '\nТелефон: '+ find_phone(w[8]) + '\n\n➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖\n\n'
 
             n += 1
             if n == 6:
