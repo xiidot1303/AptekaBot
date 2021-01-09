@@ -149,7 +149,7 @@ def global_name(update, context):
                 if '`' in i:
                     i = i.replace('`', ' ')
                 items.append([KeyboardButton(text=i)])
-        if not items:
+        if len(items) <= 2:
             mrk = [[KeyboardButton(text='Назад')]]
             update.message.reply_text('Ничего не найдено, попробуйте еще раз', reply_markup=ReplyKeyboardMarkup(mrk, resize_keyboard=True, one_time_keyboard=True))
             return GLOBAL_NAME
