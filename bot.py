@@ -15,14 +15,14 @@ load_dotenv(os.path.join(basedir, '.env'))
 
 
 
-
+superadmin = os.environ.get('superadmin')
 
 def forward(update, context):
     print(update.message.forward_from)
 
 
 def issuperadmin(id):
-    superadmin = os.environ.get('superadmin')
+    
     if id == superadmin:
         return True
     else:
