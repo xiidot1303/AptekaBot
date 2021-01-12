@@ -22,7 +22,7 @@ create_conversation_handler = ConversationHandler(
         SELECT_DRUGS: [MessageHandler(Filters.all, select_drugs)],
         
     },
-    fallbacks = []
+    fallbacks = [CallbackQueryHandler(select_drugs)]
 )
 start_conversation_handler = ConversationHandler(
     entry_points = [CommandHandler('start', start)],
