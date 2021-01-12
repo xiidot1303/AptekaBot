@@ -6,7 +6,7 @@ from conversationList import GLOBAL_NAME, SELECT_DRUGS, SUPERADMIN, UPDATE_EXCEL
 import sqlite3
 from functions import sort_percent_grow, sort_price_grow, sort_price_wane, sort_percent_wane
 import pandas as pd
-from venv import superadmin
+
 from dotenv import load_dotenv
 
 
