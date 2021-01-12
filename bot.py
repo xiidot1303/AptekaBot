@@ -7,11 +7,21 @@ import sqlite3
 from functions import sort_percent_grow, sort_price_grow, sort_price_wane, sort_percent_wane
 import pandas as pd
 from venv import superadmin
+from dotenv import load_dotenv
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(basedir, '.env'))
+
+
+
+
+
 def forward(update, context):
     print(update.message.forward_from)
 
 
 def issuperadmin(id):
+    superadmin = os.environ.get('superadmin')
     if id == superadmin:
         return True
     else:

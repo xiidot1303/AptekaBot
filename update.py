@@ -5,8 +5,11 @@ from admin import superadmin, edit_about_us, update_about_us, edit_our_partners,
 from conversationList import GLOBAL_NAME, SELECT_DRUGS, SUPERADMIN, UPDATE_EXCEL, START, EDIT_ABOUT_US, UPDATE_ABOUT_US, EDIT_OUR_PARTNERS, UPDATE_OUR_PARTNERS, EDIT_OUR_SITE
 from conversationList import UPDATE_OUR_SITE, CREATE_ADMIN, ADD_REMOVE_ADMIN, DELETE_ADMIN, WRITE_NAME, SEND_PHONE, SETTINGS, UPDATE_NAME, UPDATE_PHONE
 from callbacks import callback
-from venv import TOKEN
+from dotenv import load_dotenv
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(basedir, '.env'))
+TOKEN = os.environ.get('TOKEN')
 updater = Updater(token=TOKEN, use_context=True)
 dp = updater.dispatcher
 
