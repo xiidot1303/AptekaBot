@@ -10,12 +10,10 @@ import pandas as pd
 from dotenv import load_dotenv
 
 
-basedir = os.path.abspath(os.path.dirname(""))
+basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))
 
-
-
-superadmin = os.environ.get('superadmin')
+superadmin = os.environ.get('SUPERADMIN')
 
 def forward(update, context):
     print(update.message.forward_from)
