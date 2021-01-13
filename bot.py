@@ -10,7 +10,7 @@ import pandas as pd
 from dotenv import load_dotenv
 
 
-basedir = os.path.abspath(os.path.dirname(__file__))
+basedir = os.path.abspath(os.path.dirname(""))
 load_dotenv(os.path.join(basedir, '.env'))
 
 

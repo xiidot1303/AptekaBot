@@ -136,3 +136,6 @@ def callback(update, context):
         i_change_sort = InlineKeyboardButton(text='сортировать по {}'.format(change_sort_type(obj[1])), callback_data='sort_by_{}'.format(change_sort_type(obj[1])))
         
         cq.edit_message_text('Выбрана настройка сортировки по {}, сортироваться будет по {}'.format(obj[1], price_or_procent), reply_markup=InlineKeyboardMarkup([[i_change_price_or_procent],[i_change_sort]]))
+    if cq.data == 'next':
+        cq.edit_message_text('Нажмите /start для перезапустить бот')
+        
