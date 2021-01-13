@@ -65,9 +65,11 @@ def superadmin(update, context):
                 admin_list += '\n'
             
                 n += 1
-            
-            update.message.reply_text(admin_list, reply_markup=ReplyKeyboardMarkup(keyboard=[['добавить', 'удалять'], ['Назад']], resize_keyboard=True))
-
+            if admin_list == '':
+                admin_list = 'Админы нет'
+                update.message.reply_text(admin_list, reply_markup=ReplyKeyboardMarkup(keyboard=[['добавить'], ['Назад']], resize_keyboard=True))
+            else:
+                update.message.reply_text(admin_list, reply_markup=ReplyKeyboardMarkup(keyboard=[['добавить', 'удалять'], ['Назад']], resize_keyboard=True))
             conn.commit()
             conn.close()
             return ADD_REMOVE_ADMIN
@@ -215,8 +217,11 @@ def delete_admin(update, context):
     c = conn.cursor()
     try:
         c.execute("DELETE FROM admins WHERE id={} ".format(int(update.message.text)))
-        bot.send_message(int(update.message.text), 'Удалили вас из списка админов', reply_markup=ReplyKeyboardRemove(remove_keyboard=True))
-        bot.send_message(int(update.message.text), 'Нажмите Далее', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text='Далее', callback_data='next')]]))
+        try:
+            bot.send_message(int(update.message.text), 'Удалили вас из списка админов', reply_markup=ReplyKeyboardRemove(remove_keyboard=True))
+            bot.send_message(int(update.message.text), 'Нажмите Далее', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text='Далее', callback_data='next')]]))
+        except:
+            deded = 0
         conn.commit()
         conn.close()
         update.message.reply_text("гл. админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
