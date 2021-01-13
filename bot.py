@@ -21,7 +21,7 @@ def forward(update, context):
 
 def issuperadmin(id):
     
-    if id == superadmin:
+    if id == int(superadmin):
         return True
     else:
         return False
@@ -38,7 +38,7 @@ def start(update, context):
     
     conn.commit()
     conn.close()   
-    if update.message.chat.id == superadmin:
+    if update.message.chat.id == int(superadmin):
         update.message.reply_text("Вас приветствует главный админ панель бота", reply_markup=ReplyKeyboardMarkup(keyboard=[['Обновить Excel'], ['О нас🧾'], ['Наши партнеры🤝'], ['Наш сайт'], ['Админы']], resize_keyboard=True))
         
         return SUPERADMIN
