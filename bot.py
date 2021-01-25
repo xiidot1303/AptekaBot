@@ -147,7 +147,9 @@ def global_name(update, context):
         if 'д' in name:
             name = name.replace('д', 'д(-)?')
         if 'н' in name:
-            name = name.replace('н', 'н(-)?')
+            name = name.replace('н', 'н(-)?(н)?')
+        if 'л' in name:
+            name = name.replace('л', 'л(л)?')
         if '1' in name or '2' in name or '3' in name or '4' in name or '5' in name or '6' in name or '7' in name or '8' in name or '9' in name:
             numbers = '123456789'
             for n in name:
