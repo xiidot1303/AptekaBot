@@ -198,7 +198,7 @@ def global_name(update, context):
             return GLOBAL_NAME
         else:
         
-            update.message.reply_text('Пожалуйста, выберите лекарство из предоставленного списка.', reply_markup=InlineKeyboardMarkup(items, resize_keyboard=True))
+            update.message.reply_text('Пожалуйста, выберите лекарство из предоставленного списка.', reply_markup=InlineKeyboardMarkup(items))
             conn = sqlite3.connect('data.db')
             c = conn.cursor()
             c.execute("SELECT * FROM access_to_find WHERE id={} ".format(update.message.chat.id))
