@@ -233,8 +233,10 @@ def select_drugs(update, context):
     c = conn.cursor()
     c.execute("SELECT * FROM message WHERE id={} ".format(update.message.chat.id))
     for i in c.fetchall():
-        print(i[1])
-        bot.delete_message(update.message.chat.id, i[1])
+        try:
+            bot.delete_message(update.message.chat.id, i[1])
+        except:
+            qwqw = 0
         c.execute("DELETE FROM message WHERE id={} ".format(update.message.chat.id))
         conn.commit()
     c.execute("SELECT zero, one, two, three, four, five, six, seven, eight, nine, ten FROM list_after_search WHERE zero='{}' ".format(name))
