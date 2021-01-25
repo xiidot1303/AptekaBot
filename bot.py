@@ -136,20 +136,45 @@ def global_name(update, context):
                 name = name.replace('ы|(и|ы)', 'ы|и')
         if 'у' in name:
             name = name.replace('у', '(ю|у)')
-        if 'с' in name:
-            name = name.replace('с', '(ц|с)')
+        
+        if 'сс' in name:
+            name = name.replace('сс', 'с(с)?')
+        elif 'с' in name:
+            name = name.replace('с', '(ц|с)(с)?')
         if '-' in name:
             name = name.replace('-', '(-)?')
         if ' ' in name:
             name = name.replace(' ', '[-, ]?')
         if 'ш' in name:
             name = name.replace('ш', '(-)?(щ|ш)(-)?')
-        if 'д' in name:
-            name = name.replace('д', 'д(-)?')
-        if 'н' in name:
+        
+        if 'кк' in name:
+            name = name.replace('к', 'к(к)?')
+        elif 'д' in name:
+            name = name.replace('к', 'к(к)?')
+
+        if 'дд' in name:
+            name = name.replace('д', 'д(-)?(д)?')
+        elif 'д' in name:
+            name = name.replace('д', 'д(-)?(д)?')
+        
+        if 'нн' in name:
+            name = name.replace('нн', 'н(-)?(н)?')
+        elif 'н' in name:
             name = name.replace('н', 'н(-)?(н)?')
-        if 'л' in name:
+        
+        if 'лл' in name:
+            name = name.replace('лл', 'л(л)?')
+        elif 'л' in name:
             name = name.replace('л', 'л(л)?')
+        
+        for i in ['гг', 'зз', 'фф', 'вв', 'пп', 'рр', 'жж', 'мм', 'тт']:
+            if i in name:
+                name = name.replace(i, '{}({})?'.format(i[0], i[0]))
+            elif i[0] in name:
+                name = name.replace(i[0], '{}({})?'.format(i[0], i[0]))
+
+
         if '1' in name or '2' in name or '3' in name or '4' in name or '5' in name or '6' in name or '7' in name or '8' in name or '9' in name:
             numbers = '123456789'
             for n in name:
