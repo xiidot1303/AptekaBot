@@ -180,9 +180,10 @@ def global_name(update, context):
             for n in name:
                 if n in numbers:
                     name = name.replace(n, '[-, ]?{}[-, ]?'.format(n))
-        df1 = df[(df[df.columns[1]].str.lower().str.contains(r'^(?!a-z){}(/| )|([-, ,\W,:space:]){}(/| )'.format(name.lower(), name.lower()), na=False, regex=True))]
+        df1 = df[(df[df.columns[1]].str.lower().str.contains(r'^(?!a-z){}(/|)|([-, ,\W,:space:]){}(/|)'.format(name.lower(), name.lower()), na=False, regex=True))]
         last_search = True
         if df1.empty:
+            
             word = kiril_to_latin(update.message.text)
             conn = sqlite3.connect('data.db')
             c = conn.cursor()

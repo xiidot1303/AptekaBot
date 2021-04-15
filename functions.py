@@ -107,7 +107,7 @@ def sort_price_wane(w):
 
 
 kiril = 'ёйцукенгшщзхъфывапролджэячсмитьбю- '
-latin = 'eysukengSSzx]fivaproldjeYcsmit]bU- '
+latin = '~43ukeng99zx]fivaproldje\csmit]b/- '
 def kiril_to_latin(word):
     word = word.lower()
     new_word = ''
