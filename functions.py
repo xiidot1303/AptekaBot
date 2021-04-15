@@ -104,3 +104,29 @@ def sort_price_wane(w):
         w.remove(result[-1])
         c_all_prices.remove(max(c_all_prices))
     return result
+
+
+kiril = 'ёйцукенгшщзхъфывапролджэячсмитьбю- '
+latin = 'eysukengSSzx]fivaproldjeYcsmit]bU- '
+def kiril_to_latin(word):
+    word = word.lower()
+    new_word = ''
+    for w in word:
+        try:
+            index = kiril.index(w)
+            new_word += latin[index]
+        except:
+            new_word += w
+    return new_word
+
+def latin_to_kiril(word):
+    word = word.lower()
+    new_word =''
+    for w in word:
+        try:
+            index = latin.index(w)
+            new_word += kiril[index]
+        except:
+            new_word += w
+    return new_word
+

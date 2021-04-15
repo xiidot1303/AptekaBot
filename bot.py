@@ -4,7 +4,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMa
 import os
 from conversationList import GLOBAL_NAME, SELECT_DRUGS, SUPERADMIN, UPDATE_EXCEL, START, EDIT_ABOUT_US, UPDATE_ABOUT_US, WRITE_NAME, SEND_PHONE
 import sqlite3
-from functions import sort_percent_grow, sort_price_grow, sort_price_wane, sort_percent_wane
+from functions import *
 import pandas as pd
 
 from dotenv import load_dotenv
@@ -116,7 +116,7 @@ def global_name(update, context):
             if i[-3::] == 'xls' or i[-4::] == 'xlsx':
                 path = i
                 break
-        
+
         name = update.message.text.lower()
         df = pd.read_excel('{}'.format(path), sheet_name=0)
         
@@ -166,7 +166,7 @@ def global_name(update, context):
         if 'лл' in name:
             name = name.replace('лл', 'л(л)?')
         elif 'л' in name:
-            name = name.replace('л', 'л(л)?')
+            name = name.replace('л', 'л(л)?(ь)?')
         
         for i in ['гг', 'зз', 'фф', 'вв', 'пп', 'рр', 'жж', 'мм', 'тт']:
             if i in name:
@@ -180,17 +180,43 @@ def global_name(update, context):
             for n in name:
                 if n in numbers:
                     name = name.replace(n, '[-, ]?{}[-, ]?'.format(n))
-        df1 = df[(df[df.columns[0]].str.lower().str.contains(r'^(?!a-z){}(/| )|([-, ,\W,:space:]){}(/| )'.format(name.lower(), name.lower()), na=False, regex=True))]
+        df1 = df[(df[df.columns[1]].str.lower().str.contains(r'^(?!a-z){}(/| )|([-, ,\W,:space:]){}(/| )'.format(name.lower(), name.lower()), na=False, regex=True))]
+        last_search = True
         if df1.empty:
-            df1 = df[(df[df.columns[1]].str.lower().str.contains(r'{}'.format(name.lower()), na=False, regex=True))]
+            word = kiril_to_latin(update.message.text)
+            conn = sqlite3.connect('data.db')
+            c = conn.cursor()
+            c.execute("select * from all_list where soundex(a)=soundex('{}') ".format(word))
+            all = c.fetchall()
+            
+            l = [i[1] for i in all]
+            conn.close()
+            #print(l)
+            if l != []:
+
+                last_search = False
+        else:
+            l = df1[df1.columns[1]]
+            all = df1.values.tolist()
+            
+            last_search = False
+        if last_search:
+            
+            df1 = df[(df[df.columns[2]].str.lower().str.contains(r'{}'.format(name.lower()), na=False, regex=True))]
+            all = df1.values.tolist()
+            l = df1[df1.columns[1]]
         items = []
         texts = []
-        l = df1[df1.columns[0]]
+        
         for i in l:
             if not i in texts:
                 texts.append(i)
+                
                 if '`' in i:
                     i = i.replace('`', ' ')
+                if len(i) > 35:
+                    continue
+                
                 items.append([InlineKeyboardButton(text=i, callback_data=i)])
         if len(items) == 0:
             
@@ -205,7 +231,9 @@ def global_name(update, context):
             n = c.fetchone()[2]
             c.execute("""UPDATE access_to_find SET chance = {} WHERE id={} """.format(int(n)-1, update.message.chat.id))
             conn.commit()
-            for i in df1.values.tolist():
+            for i in all:
+                i = i[1:]
+            
                 c.execute("SELECT * FROM list_after_search WHERE id={} AND zero='{}' AND nine='{}' AND eight='{}' ".format(update.message.chat.id, i[0], i[9], i[8]))
                 if not c.fetchone():
                     if i[4] == 'догов.':
@@ -239,6 +267,7 @@ def select_drugs(update, context):
             qwqw = 0
         c.execute("DELETE FROM message WHERE id={} ".format(update.message.chat.id))
         conn.commit()
+    print(name)
     c.execute("SELECT zero, one, two, three, four, five, six, seven, eight, nine, ten FROM list_after_search WHERE zero='{}' ".format(name))
     w = c.fetchall()
     if not w:
@@ -431,6 +460,16 @@ def update_excel(update, context):
 
             except:
                 fnwow = 0
+        c.execute("select * from all_list ")
+        for i in c.fetchall():
+            c.execute("delete from all_list ")
+        df = pd.read_excel('{}'.format(path), sheet_name=0)
+        for i in df.values.tolist():
+            try:
+                i[0] = kiril_to_latin(i[0])
+                c.execute("insert into all_list values ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}') ".format(*i))
+            except:
+                ewfdeqwf = 0  # do nothing
         conn.commit()
         conn.close()
 
