@@ -180,7 +180,7 @@ def global_name(update, context):
             for n in name:
                 if n in numbers:
                     name = name.replace(n, '[-, ]?{}[-, ]?'.format(n))
-        df1 = df[(df[df.columns[1]].str.lower().str.contains(r'^(?!a-z){}(/|)|([-, ,\W,:space:]){}(/|)'.format(name.lower(), name.lower()), na=False, regex=True))]
+        df1 = df[(df[df.columns[0]].str.lower().str.contains(r'^(?!a-z){}(/|)|([-, ,\W,:space:]){}(/|)'.format(name.lower(), name.lower()), na=False, regex=True))]
         last_search = True
         if df1.empty:
             
@@ -208,17 +208,36 @@ def global_name(update, context):
             l = df1[df1.columns[1]]
         items = []
         texts = []
-        
+        index = 0
+        conn = sqlite3.connect('data.db')
+        c = conn.cursor()
+        c.execute("select * from list_transfer where id={}".format(update.message.chat.id))
+        for aa in c.fetchall():
+            c.execute("delete from list_transfer where id={}".format(update.message.chat.id))
+        conn.commit()
+        break_ = False
         for i in l:
             if not i in texts:
                 texts.append(i)
-                
+                if break_:
+                    c.execute("insert into list_transfer values ({}, '{}', '{}') ".format(update.message.chat.id, i, str(index)))
+                    index += 1
+                    continue
                 if '`' in i:
                     i = i.replace('`', ' ')
-                if len(i) > 35:
-                    continue
                 
-                items.append([InlineKeyboardButton(text=i, callback_data=i)])
+                if len(items) <= 10:
+                    
+                    items.append([InlineKeyboardButton(text=i, callback_data=str(index))])
+
+                    c.execute("insert into list_transfer values ({}, '{}', '{}') ".format(update.message.chat.id, i, str(index)))
+                    index += 1
+
+                else:
+                    items.append([InlineKeyboardButton(text='Следующий➡️', callback_data='{}_next_2'.format(str(update.message.chat.id)))])
+                    break_ = True
+        conn.commit()
+        conn.close()
         if len(items) == 0:
             
             update.message.reply_text('Данного препарата нет в наших списках. Пожалуйста, введите другое название')
@@ -255,11 +274,76 @@ def select_drugs(update, context):
     update = update.callback_query
     bot = context.bot
     name = update.data
-    
-    bot.send_chat_action(chat_id=update.message.chat.id, action=ChatAction.TYPING)
- 
     conn = sqlite3.connect('data.db')
     c = conn.cursor()
+    if 'index' in name:
+        return GLOBAL_NAME
+    if 'next_' in name:
+        try:
+            data, ttt, n = name.split('_') # ttt is unneccessary n is page_n, data is user id
+            c.execute("select * from list_transfer where id={}".format(update.message.chat.id))
+            obj = c.fetchall()
+
+
+            breaknvalues = (int(n) - 1) * 11
+            ls = []  # new list
+            for i in obj[breaknvalues:]:
+                if len(ls) <= 10:
+
+                    ls.append([InlineKeyboardButton(text=i[1], callback_data=i[2])])
+                else:
+                    nn = str(int(n)+1) # next n 
+                    pn = str(int(n)-1) # previous n
+                    if pn == '0':
+                        ls.append([InlineKeyboardButton(text=n, callback_data='index'), InlineKeyboardButton(text='Следующий➡️', callback_data='{}_next_{}'.format(update.message.chat.id, nn))])
+                    else:
+                        ls.append([InlineKeyboardButton(text='⬅️Предыдущий', callback_data='{}_previous_{}'.format(update.message.chat.id, pn)), InlineKeyboardButton(text=n, callback_data='index'), InlineKeyboardButton(text='Следующий➡️', callback_data='{}_next_{}'.format(update.message.chat.id, nn))])
+                    break
+            else:
+                pn = str(int(n)-1)
+                if pn != '0':
+                    ls.append([InlineKeyboardButton(text='⬅️Предыдущий', callback_data='{}_previous_{}'.format(update.message.chat.id, pn)), InlineKeyboardButton(text=n, callback_data='index')])
+
+            update.edit_message_text('Пожалуйста, выберите лекарство из предоставленного списка.', reply_markup=InlineKeyboardMarkup(ls))
+            return GLOBAL_NAME
+        except:
+            dgeduie = 0
+    if 'previous_' in name:
+        if True:
+            data, ttt, n = name.split('_') # ttt is unneccessary n is page_n
+            c.execute("select * from list_transfer where id={}".format(update.message.chat.id))
+            obj = c.fetchall()
+            
+            
+            breaknvalues = (int(n) - 1) * 9
+            ls = []
+            for i in obj[breaknvalues:]:
+                if len(ls) <= 10:
+                    ls.append([InlineKeyboardButton(text=i[1], callback_data=i[2])])
+                else:
+                    nn = str(int(n)+1)
+                    pn = str(int(n)-1)
+
+
+                    if pn == '0':
+                        ls.append([InlineKeyboardButton(text=n, callback_data='index'), InlineKeyboardButton(text='Следующий➡️', callback_data='{}_next_{}'.format(update.message.chat.id, nn))])
+                    else:
+                        ls.append([InlineKeyboardButton(text='⬅️Предыдущий', callback_data='{}_previous_{}'.format(update.message.chat.id, pn)), InlineKeyboardButton(text=n, callback_data='index'), InlineKeyboardButton(text='Следующий➡️', callback_data='{}_next_{}'.format(update.message.chat.id, nn))])
+                    break
+            else:
+                pn = str(int(n)-1)
+                if pn != '0':
+                    ls.append([InlineKeyboardButton(text='⬅️Предыдущий', callback_data='{}_previous_{}'.format(update.message.chat.id, pn)), InlineKeyboardButton(text=n, callback_data='index')])
+
+            update.edit_message_text('Пожалуйста, выберите лекарство из предоставленного списка.', reply_markup=InlineKeyboardMarkup(ls))
+            return GLOBAL_NAME
+
+        #except:
+        #    dededede = 0
+    bot.send_chat_action(chat_id=update.message.chat.id, action=ChatAction.TYPING)
+ 
+    c.execute("select title from list_transfer where  id={} and number='{}' ".format(update.message.chat.id, name))
+    name = c.fetchone()[0]
     c.execute("SELECT * FROM message WHERE id={} ".format(update.message.chat.id))
     for i in c.fetchall():
         try:
